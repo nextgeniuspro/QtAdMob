@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class IQtAdMobBanner;
+class IQtAdMobInterstitial;
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +27,7 @@ private:
     Ui::MainWindow *ui;
 
     IQtAdMobBanner* m_Banner;
+    IQtAdMobInterstitial* m_Interstitial;
     bool m_Switch;
 };
 

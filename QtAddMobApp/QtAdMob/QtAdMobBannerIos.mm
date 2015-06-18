@@ -170,7 +170,7 @@ QSize QtAdMobBannerIos::GetDimensions()
     return QSize(size.width, size.height);
 }
 
-bool QtAdMobBannerIos::IsShowed() const
+bool QtAdMobBannerIos::IsShow() const
 {
     if (!IsValid())
     {
@@ -228,7 +228,7 @@ void QtAdMobBannerIos::OnLoad(bool status)
 
 bool QtAdMobBannerIos::IsValid() const
 {
-    return (m_Delegate.bannerView != nil);
+    return (m_Delegate && m_Delegate.bannerView != nil);
 }
 
 #endif // TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR

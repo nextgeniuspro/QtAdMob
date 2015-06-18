@@ -1,5 +1,5 @@
-#ifndef QTADMOBBANNER_H
-#define QTADMOBBANNER_H
+#ifndef QTADMOBBANNERANDROID_H
+#define QTADMOBBANNERANDROID_H
 
 #include "IQtAdMobBanner.h"
 
@@ -36,4 +36,4 @@ private:
 
 #endif // __ANDROID_API__
 
-#endif // QTADMOBBANNER_H
+#endif // QTADMOBBANNERANDROID_H

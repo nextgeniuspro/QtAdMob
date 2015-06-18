@@ -31,7 +31,7 @@ public:
     virtual void SetAdSize(BannerSize size) = 0;
     virtual void SetPosition(const QPoint& position) = 0;
     virtual QSize GetDimensions() = 0;
-    virtual bool IsShowed() const = 0;
+    virtual bool IsShow() const = 0;
     virtual bool IsLoaded() const = 0;
     virtual void ShowAd() = 0;
     virtual void HideAd() = 0;

@@ -36,7 +36,7 @@ QSize QtAdMobBannerDummy::GetDimensions()
     return QSize();
 }
 
-bool QtAdMobBannerDummy::IsShowed() const
+bool QtAdMobBannerDummy::IsShow() const
 {
     return false;
 }
