@@ -3,22 +3,19 @@
 
 #include "IQtAdMobBanner.h"
 
-#if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+#if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 
 #include <QStringList>
 
-class QWidget;
 class QAndroidJniObject;
 #if defined(__OBJC__)
-@class GADBannerView;
 @class QtAdMobBannerDelegate;
-@class NSMutableArray;
 #endif
 
 class QtAdMobBannerIos : public IQtAdMobBanner
 {
 public:
-    QtAdMobBannerIos(QWidget* parent = 0);
+    QtAdMobBannerIos();
     virtual ~QtAdMobBannerIos();
 
     virtual void Initialize();
@@ -43,12 +40,16 @@ private:
 
 private:
 #if defined(__OBJC__)
-    GADBannerView* m_BannerView;
     QtAdMobBannerDelegate* m_Delegate;
-    NSMutableArray* m_TestDevices;
 #endif
-    QWidget* m_Parent;
-    bool m_IsLoaded;
+    enum LoadingState
+    {
+        Idle = 0,
+        Loading,
+        Loaded
+    };
+    
+    LoadingState m_LoadingState;
 };
 
 #endif // TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR

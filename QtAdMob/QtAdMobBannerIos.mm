@@ -1,13 +1,14 @@
 #include "QtAdMobBannerIos.h"
 
-#if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+#if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 
 #include <GoogleMobileAds/GADBannerView.h>
 #include <GoogleMobileAds/GADAdSize.h>
-#include <QWidget>
 
 @interface QtAdMobBannerDelegate : NSObject<GADBannerViewDelegate>
 
+@property (nonatomic, strong) GADBannerView* bannerView;
+@property (nonatomic, strong) NSMutableArray* testDevices;
 @property (nonatomic, assign) QtAdMobBannerIos *handler;
 
 - (id)initWithHandler:(QtAdMobBannerIos *)handler;
@@ -22,6 +23,9 @@
     if (self)
     {
         _handler = handler;
+        _testDevices = [[NSMutableArray alloc] initWithArray:@[kGADSimulatorID]];
+        _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
+        _bannerView.delegate = self;
     }
     return self;
 }
@@ -29,7 +33,6 @@
 - (void)dealloc
 {
     _handler = nil;
-    [super dealloc];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
@@ -55,20 +58,14 @@
 
 @end
 
-QtAdMobBannerIos::QtAdMobBannerIos(QWidget* parent)
-    : m_BannerView(0)
-    , m_Delegate(0)
-    , m_TestDevices(0)
-    , m_Parent(parent)
-    , m_IsLoaded(false)
+QtAdMobBannerIos::QtAdMobBannerIos()
+    : m_Delegate(nil)
+    , m_LoadingState(Idle)
 {
-    m_TestDevices = [[NSMutableArray alloc] initWithArray:@[kGADSimulatorID]];
 }
 
 QtAdMobBannerIos::~QtAdMobBannerIos()
 {
-    [m_TestDevices release];
-    
     Shutdown();
 }
 
@@ -79,19 +76,15 @@ void QtAdMobBannerIos::Initialize()
         return;
     }
 
-    UIWindow *window = [[[UIApplication sharedApplication] windows] firstObject];
+    UIApplication *application = [UIApplication sharedApplication];
+    UIWindow *window = [[application windows] firstObject];
     UIViewController* rootViewController = [window rootViewController];
-    
-    UIView *view = rootViewController.view;//reinterpret_cast<UIView *>(m_Parent->winId());
-    //UIViewController *qtController = [[view window] rootViewController];
+    UIView *view = rootViewController.view;
     
     m_Delegate = [[QtAdMobBannerDelegate alloc] initWithHandler:this];
-    
-    m_BannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    m_BannerView.rootViewController = rootViewController;
-    m_BannerView.delegate = m_Delegate;
+    m_Delegate.bannerView.rootViewController = rootViewController;
 
-    [view addSubview:m_BannerView];
+    [view addSubview:m_Delegate.bannerView];
 }
 
 void QtAdMobBannerIos::Shutdown()
@@ -101,10 +94,8 @@ void QtAdMobBannerIos::Shutdown()
         return;
     }
     
-    m_BannerView.delegate = nil;
-    [m_BannerView removeFromSuperview];
-    [m_BannerView release];
-    [m_Delegate release];
+    [m_Delegate.bannerView removeFromSuperview];
+    m_Delegate = nil;
 }
 
 void QtAdMobBannerIos::SetAdUnitId(const QString& unitId)
@@ -114,12 +105,17 @@ void QtAdMobBannerIos::SetAdUnitId(const QString& unitId)
         return;
     }
     
-    m_BannerView.adUnitID = [NSString stringWithUTF8String:unitId.toUtf8().data()];
-    m_IsLoaded = false;
+    m_Delegate.bannerView.adUnitID = [NSString stringWithUTF8String:unitId.toUtf8().data()];
+    m_LoadingState = Idle;
 }
 
 void QtAdMobBannerIos::SetAdSize(IQtAdMobBanner::BannerSize size)
 {
+    if (!IsValid())
+    {
+        return;
+    }
+    
     GADAdSize newSize = kGADAdSizeBanner;
     switch (size)
     {
@@ -141,25 +137,13 @@ void QtAdMobBannerIos::SetAdSize(IQtAdMobBanner::BannerSize size)
         case WideSkyscraper:
             newSize = kGADAdSizeSkyscraper;
             break;
-        /*case 6:
-            newSize = kGADAdSizeSmartBannerPortrait;
-            break;
-        case 7:
-            newSize = kGADAdSizeLeaderboard;
-            break;
-        case 8:
-            newSize = kGADAdSizeInvalid;
-            break;*/
-            
-        default:
-            break;
     }
     
-    if (!CGSizeEqualToSize(m_BannerView.adSize.size, newSize.size) ||
-        m_BannerView.adSize.flags != newSize.flags)
+    if (!CGSizeEqualToSize(m_Delegate.bannerView.adSize.size, newSize.size) ||
+        m_Delegate.bannerView.adSize.flags != newSize.flags)
     {
-        m_BannerView.adSize = newSize;
-        m_IsLoaded = false;
+        m_Delegate.bannerView.adSize = newSize;
+        m_LoadingState = Idle;
     }
 }
 
@@ -170,9 +154,9 @@ void QtAdMobBannerIos::SetPosition(const QPoint& position)
         return;
     }
     
-    CGRect frame = m_BannerView.frame;
+    CGRect frame = m_Delegate.bannerView.frame;
     frame.origin = CGPointMake(position.x(), position.y());
-    m_BannerView.frame = frame;
+    m_Delegate.bannerView.frame = frame;
 }
 
 QSize QtAdMobBannerIos::GetDimensions()
@@ -182,7 +166,7 @@ QSize QtAdMobBannerIos::GetDimensions()
         return QSize();
     }
     
-    CGSize size = m_BannerView.adSize.size;
+    CGSize size = m_Delegate.bannerView.adSize.size;
     return QSize(size.width, size.height);
 }
 
@@ -193,12 +177,12 @@ bool QtAdMobBannerIos::IsShowed() const
         return false;
     }
     
-    return !m_BannerView.hidden;
+    return !m_Delegate.bannerView.hidden;
 }
 
 bool QtAdMobBannerIos::IsLoaded() const
 {
-    return m_IsLoaded;
+    return (m_LoadingState == Loaded);
 }
 
 void QtAdMobBannerIos::ShowAd()
@@ -208,14 +192,15 @@ void QtAdMobBannerIos::ShowAd()
         return;
     }
     
-    if (!IsLoaded())
+    if (m_LoadingState == Idle)
     {
         GADRequest *request = [GADRequest request];
-        request.testDevices = m_TestDevices;
-        [m_BannerView loadRequest:request];
+        request.testDevices = m_Delegate.testDevices;
+        [m_Delegate.bannerView loadRequest:request];
+        m_LoadingState = Loading;
     }
     
-    m_BannerView.hidden = NO;
+    m_Delegate.bannerView.hidden = NO;
 }
 
 void QtAdMobBannerIos::HideAd()
@@ -225,25 +210,25 @@ void QtAdMobBannerIos::HideAd()
         return;
     }
     
-    m_BannerView.hidden = YES;
+    m_Delegate.bannerView.hidden = YES;
 }
 
 void QtAdMobBannerIos::AddTestDevice(const QString& hashedDeviceId)
 {
     NSString *deviceId = [NSString stringWithUTF8String:hashedDeviceId.toUtf8().data()];
-    [m_TestDevices addObject:deviceId];
+    [m_Delegate.testDevices addObject:deviceId];
     
-    m_IsLoaded = false;
+    m_LoadingState = Idle;
 }
 
 void QtAdMobBannerIos::OnLoad(bool status)
 {
-    m_IsLoaded = status;
+    m_LoadingState = (status ? Loaded : Idle);
 }
 
 bool QtAdMobBannerIos::IsValid() const
 {
-    return (m_BannerView != nil);
+    return (m_Delegate.bannerView != nil);
 }
 
 #endif // TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR

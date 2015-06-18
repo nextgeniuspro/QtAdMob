@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_Banner = CreateQtAdMobBanner(this);
+    m_Banner = CreateQtAdMobBanner();
     m_Banner->Initialize();
     m_Banner->SetAdUnitId("ca-app-pub-7485900711629006/8288667458");
     m_Banner->SetAdSize(IQtAdMobBanner::Banner);

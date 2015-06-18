@@ -3,7 +3,7 @@
 
 #include "IQtAdMobBanner.h"
 
-#ifdef __ANDROID_API__
+#if (__ANDROID_API__ >= 9)
 
 class QAndroidJniObject;
 

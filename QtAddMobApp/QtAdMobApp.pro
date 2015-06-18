@@ -10,7 +10,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QtAdMob
 TEMPLATE = app
-DEFINES += ANDROID TARGET_OS_IPHONE TARGET_IPHONE_SIMULATOR
 
 SOURCES += \
     main.cpp \
@@ -26,35 +25,32 @@ include(QtAdMob/QtAdMob.pri)
 
 QTADMOB_LIB_DIR = $$PWD/QtAdMob
 
-ANDROID:
+android:
 {
-    QT += androidextras gui-private
-
     ANDROID_PACKAGE_SOURCE_DIR = $$QTADMOB_LIB_DIR/platform/android
-
-    DISTFILES += \
-        $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml \
-        $$ANDROID_PACKAGE_SOURCE_DIR/project.properties \
-        $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/QtAdMobActivity.java
+    android:QT += androidextras gui-private
+    android:DISTFILES += \
+            $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml \
+            $$ANDROID_PACKAGE_SOURCE_DIR/project.properties \
+            $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/QtAdMobActivity.java
 }
 
-IOS:
+ios:
 {
-    #QT += gui_private
-
-    #IOS_PACKAGE_SOURCE_DIR = $$QTADMOB_LIB_DIR/platform/ios
-
-    #LIBS += -F $$IOS_PACKAGE_SOURCE_DIR/GoogleMobileAds -framework GoogleMobileAds \
-    #        -framework AVFoundation \
-    #        -framework AudioToolbox \
-    #        -framework CoreTelephony \
-    #        -framework MessageUI \
-    #        -framework SystemConfiguration \
-    #        -framework CoreGraphics \
-    #        -framework AdSupport \
-    #        -framework StoreKit \
-    #        -framework EventKit \
-    #        -framework EventKitUI \
-    #        -framework CoreMedia
+    IOS_PACKAGE_SOURCE_DIR = $$QTADMOB_LIB_DIR/platform/ios
+    QMAKE_CXXFLAGS += -fobjc-arc
+    ios:QT += gui_private
+    ios:LIBS += -F $$IOS_PACKAGE_SOURCE_DIR/GoogleMobileAds -framework GoogleMobileAds \
+                -framework AVFoundation \
+                -framework AudioToolbox \
+                -framework CoreTelephony \
+                -framework MessageUI \
+                -framework SystemConfiguration \
+                -framework CoreGraphics \
+                -framework AdSupport \
+                -framework StoreKit \
+                -framework EventKit \
+                -framework EventKitUI \
+                -framework CoreMedia
 }
 

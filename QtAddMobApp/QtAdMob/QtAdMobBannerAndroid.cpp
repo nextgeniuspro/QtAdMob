@@ -1,6 +1,6 @@
 #include "QtAdMobBannerAndroid.h"
 
-#ifdef __ANDROID_API__
+#if (__ANDROID_API__ >= 9)
 
 #include <QAndroidJniObject>
 #include <QPA/QPlatformNativeInterface.h>
