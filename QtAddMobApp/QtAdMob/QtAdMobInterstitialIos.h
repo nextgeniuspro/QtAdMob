@@ -16,9 +16,9 @@ public:
     QtAdMobInterstitialIos();
     virtual ~QtAdMobInterstitialIos();
 
-    virtual void LoadWithAdUnitId(const QString& unitId);
+    virtual void LoadWithUnitId(const QString& unitId);
     virtual bool IsLoaded() const;
-    virtual void ShowAd();
+    virtual void Show();
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
 
@@ -30,7 +30,7 @@ private:
 
 private:
 #if defined(__OBJC__)
-    QtAdMobInterstitialDelegate* m_Delegate;
+    QtAdMobInterstitialDelegate* m_AdMob;
 #endif
     bool m_IsNeedToShow;
 };

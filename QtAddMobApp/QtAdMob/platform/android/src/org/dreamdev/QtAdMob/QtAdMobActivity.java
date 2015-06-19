@@ -230,8 +230,6 @@ public class QtAdMobActivity extends QtActivity
         {
             public void run() 
             {
-                Log.i("iii", "sdfdfs");
-
                 m_IsAdInterstitialLoaded = false;
                 m_IsAdInterstitiaNeedToShow = false;
 
@@ -241,7 +239,6 @@ public class QtAdMobActivity extends QtActivity
                 {
                     public void onAdLoaded()
                     {
-                        Log.i("iii", "sasasas");
                         m_IsAdInterstitialLoaded = true;
                         ShowAdInterstitial();
                     }
@@ -269,7 +266,6 @@ public class QtAdMobActivity extends QtActivity
         {
             public void run()
             {
-                Log.i("iii", "sssdsds");
                 if (m_IsAdInterstitialLoaded)
                 {
                     m_AdInterstitial.show();

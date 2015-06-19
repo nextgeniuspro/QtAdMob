@@ -19,7 +19,7 @@ QtAdMobBannerAndroid::QtAdMobBannerAndroid()
 
 QtAdMobBannerAndroid::~QtAdMobBannerAndroid()
 {
-    HideAd();
+    Hide();
     if (m_Activity)
     {
         delete m_Activity;
@@ -46,7 +46,7 @@ void QtAdMobBannerAndroid::Shutdown()
     m_Activity->callMethod<void>("ShutdownAdBanner");
 }
 
-void QtAdMobBannerAndroid::SetAdUnitId(const QString& unitId)
+void QtAdMobBannerAndroid::SetUnitId(const QString& unitId)
 {
     if (!IsValid())
     {
@@ -57,7 +57,7 @@ void QtAdMobBannerAndroid::SetAdUnitId(const QString& unitId)
     m_Activity->callMethod<void>("SetAdBannerUnitId", "(Ljava/lang/String;)V", param1.object<jstring>());
 }
 
-void QtAdMobBannerAndroid::SetAdSize(IQtAdMobBanner::BannerSize size)
+void QtAdMobBannerAndroid::SetSize(IQtAdMobBanner::BannerSize size)
 {
     if (!IsValid())
     {
@@ -65,6 +65,14 @@ void QtAdMobBannerAndroid::SetAdSize(IQtAdMobBanner::BannerSize size)
     }
 
     m_Activity->callMethod<void>("SetAdBannerSize", "(I)V", (int)size);
+}
+
+QSize QtAdMobBannerAndroid::GetSizeInPixels()
+{
+    int width = m_Activity->callMethod<int>("GetAdBannerWidth");
+    int height = m_Activity->callMethod<int>("GetAdBannerHeight");
+
+    return QSize(width, height);
 }
 
 void QtAdMobBannerAndroid::SetPosition(const QPoint& position)
@@ -75,14 +83,6 @@ void QtAdMobBannerAndroid::SetPosition(const QPoint& position)
     }
 
     m_Activity->callMethod<void>("SetAdBannerPosition", "(II)V", position.x(), position.y());
-}
-
-QSize QtAdMobBannerAndroid::GetDimensions()
-{
-    int width = m_Activity->callMethod<int>("GetAdBannerWidth");
-    int height = m_Activity->callMethod<int>("GetAdBannerHeight");
-
-    return QSize(width, height);
 }
 
 bool QtAdMobBannerAndroid::IsShow() const
@@ -107,7 +107,7 @@ bool QtAdMobBannerAndroid::IsLoaded() const
     return isLoaded;
 }
 
-void QtAdMobBannerAndroid::ShowAd()
+void QtAdMobBannerAndroid::Show()
 {
     if (!IsValid())
     {
@@ -117,7 +117,7 @@ void QtAdMobBannerAndroid::ShowAd()
     m_Activity->callMethod<void>("ShowAdBanner");
 }
 
-void QtAdMobBannerAndroid::HideAd()
+void QtAdMobBannerAndroid::Hide()
 {
     if (!IsValid())
     {

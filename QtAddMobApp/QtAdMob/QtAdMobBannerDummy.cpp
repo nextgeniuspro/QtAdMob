@@ -16,24 +16,24 @@ void QtAdMobBannerDummy::Shutdown()
 {
 }
 
-void QtAdMobBannerDummy::SetAdUnitId(const QString& unitId)
+void QtAdMobBannerDummy::SetUnitId(const QString& unitId)
 {
     UNUSED(unitId);
 }
 
-void QtAdMobBannerDummy::SetAdSize(IQtAdMobBanner::BannerSize size)
+void QtAdMobBannerDummy::SetSize(IQtAdMobBanner::BannerSize size)
 {
     UNUSED(size);
+}
+
+QSize QtAdMobBannerDummy::GetSizeInPixels()
+{
+    return QSize();
 }
 
 void QtAdMobBannerDummy::SetPosition(const QPoint& position)
 {
     UNUSED(position);
-}
-
-QSize QtAdMobBannerDummy::GetDimensions()
-{
-    return QSize();
 }
 
 bool QtAdMobBannerDummy::IsShow() const
@@ -46,11 +46,11 @@ bool QtAdMobBannerDummy::IsLoaded() const
     return false;
 }
 
-void QtAdMobBannerDummy::ShowAd()
+void QtAdMobBannerDummy::Show()
 {
 }
 
-void QtAdMobBannerDummy::HideAd()
+void QtAdMobBannerDummy::Hide()
 {
 }
 

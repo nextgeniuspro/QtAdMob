@@ -9,9 +9,9 @@ public:
     QtAdMobInterstitialDummy();
     virtual ~QtAdMobInterstitialDummy();
 
-    virtual void LoadWithAdUnitId(const QString& unitId);
+    virtual void LoadWithUnitId(const QString& unitId);
     virtual bool IsLoaded() const;
-    virtual void ShowAd();
+    virtual void Show();
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
 };

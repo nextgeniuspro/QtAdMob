@@ -11,9 +11,9 @@ public:
     IQtAdMobInterstitial() {}
     virtual ~IQtAdMobInterstitial() {}
 
-    virtual void LoadWithAdUnitId(const QString& unitId) = 0;
+    virtual void LoadWithUnitId(const QString& unitId) = 0;
     virtual bool IsLoaded() const = 0;
-    virtual void ShowAd() = 0;
+    virtual void Show() = 0;
 
     virtual void AddTestDevice(const QString& hashedDeviceId) = 0;
 };

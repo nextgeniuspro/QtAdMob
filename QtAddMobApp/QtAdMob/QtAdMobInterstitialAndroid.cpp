@@ -26,9 +26,9 @@ QtAdMobInterstitialAndroid::~QtAdMobInterstitialAndroid()
     }
 }
 
-void QtAdMobInterstitialAndroid::LoadWithAdUnitId(const QString& unitId)
+void QtAdMobInterstitialAndroid::LoadWithUnitId(const QString& unitId)
 {
-    if (IsValid())
+    if (!IsValid())
     {
         return;
     }
@@ -48,7 +48,7 @@ bool QtAdMobInterstitialAndroid::IsLoaded() const
     return isLoaded;
 }
 
-void QtAdMobInterstitialAndroid::ShowAd()
+void QtAdMobInterstitialAndroid::Show()
 {    
     if (!IsValid())
     {

@@ -13,15 +13,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_Banner = CreateQtAdMobBanner();
     m_Banner->Initialize();
-    m_Banner->SetAdUnitId("ca-app-pub-7485900711629006/8288667458");
-    m_Banner->SetAdSize(IQtAdMobBanner::Banner);
+    m_Banner->SetUnitId("ca-app-pub-7485900711629006/8288667458");
+    m_Banner->SetSize(IQtAdMobBanner::Banner);
     m_Banner->AddTestDevice("514ED2E95AD8EECE454CC5565326160A");
-    m_Banner->ShowAd();
+    m_Banner->Show();
 
     m_Interstitial = CreateQtAdMobInterstitial();
-    m_Interstitial->LoadWithAdUnitId("ca-app-pub-7485900711629006/9462519453");
+    m_Interstitial->LoadWithUnitId("ca-app-pub-7485900711629006/9462519453");
     m_Interstitial->AddTestDevice("514ED2E95AD8EECE454CC5565326160A");
-    m_Interstitial->ShowAd();
+    m_Interstitial->Show();
 
     connect(ui->okButton, SIGNAL(clicked()), this, SLOT(OnButtonOkClicked()));
 }
@@ -36,7 +36,7 @@ MainWindow::~MainWindow()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     UNUSED(event);
-    QPoint position((width() - m_Banner->GetDimensions().width()) * 0.5f, 50.0f);
+    QPoint position((width() - m_Banner->GetSizeInPixels().width()) * 0.5f, 50.0f);
     m_Banner->SetPosition(position);
 }
 
@@ -45,12 +45,12 @@ void MainWindow::OnButtonOkClicked()
     bool isShowed = m_Banner->IsShow();
     if (!isShowed)
     {
-        m_Banner->ShowAd();
+        m_Banner->Show();
         ui->okButton->setText("Hide Banner");
     }
     else
     {
-        m_Banner->HideAd();
+        m_Banner->Hide();
         ui->okButton->setText("Show Banner");
     }
 }

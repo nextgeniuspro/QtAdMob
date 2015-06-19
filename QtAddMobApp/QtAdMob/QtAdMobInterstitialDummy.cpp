@@ -9,7 +9,7 @@ QtAdMobInterstitialDummy::~QtAdMobInterstitialDummy()
 {
 }
 
-void QtAdMobInterstitialDummy::LoadWithAdUnitId(const QString& unitId)
+void QtAdMobInterstitialDummy::LoadWithUnitId(const QString& unitId)
 {
     UNUSED(unitId);
 }
@@ -19,7 +19,7 @@ bool QtAdMobInterstitialDummy::IsLoaded() const
     return false;
 }
 
-void QtAdMobInterstitialDummy::ShowAd()
+void QtAdMobInterstitialDummy::Show()
 {    
 }
 
