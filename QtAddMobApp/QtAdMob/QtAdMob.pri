@@ -6,7 +6,9 @@
 
 SOURCES += \
     QtAdMob/QtAdMobBannerAndroid.cpp \
-    QtAdMob/QtAdMobBannerDummy.cpp
+    QtAdMob/QtAdMobBannerDummy.cpp \
+    $$PWD/QtAdMobInterstitialAndroid.cpp \
+    $$PWD/QtAdMobInterstitialDummy.cpp
 
 OBJECTIVE_SOURCES += \
     QtAdMob/QtAdMobBannerIos.mm \
@@ -20,4 +22,6 @@ HEADERS  += \
     QtAdMob/QtAdMobBanner.h \
     $$PWD/IQtAdMobInterstitial.h \
     $$PWD/QtAdMobInterstitial.h \
-    $$PWD/QtAdMobInterstitialIos.h
+    $$PWD/QtAdMobInterstitialIos.h \
+    $$PWD/QtAdMobInterstitialAndroid.h \
+    $$PWD/QtAdMobInterstitialDummy.h

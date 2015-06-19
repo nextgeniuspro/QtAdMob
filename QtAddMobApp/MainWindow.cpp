@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_Interstitial = CreateQtAdMobInterstitial();
     m_Interstitial->LoadWithAdUnitId("ca-app-pub-7485900711629006/9462519453");
-    m_Interstitial->AddTestDevice("2f8040c999ec8c8455c49999eaa74d6a");
+    m_Interstitial->AddTestDevice("514ED2E95AD8EECE454CC5565326160A");
     m_Interstitial->ShowAd();
 
     connect(ui->okButton, SIGNAL(clicked()), this, SLOT(OnButtonOkClicked()));

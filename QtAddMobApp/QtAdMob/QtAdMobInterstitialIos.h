@@ -5,8 +5,6 @@
 
 #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 
-#include <QStringList>
-
 class QAndroidJniObject;
 #if defined(__OBJC__)
 @class QtAdMobInterstitialDelegate;

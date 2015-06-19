@@ -38,7 +38,7 @@ android:
 ios:
 {
     IOS_PACKAGE_SOURCE_DIR = $$QTADMOB_LIB_DIR/platform/ios
-    QMAKE_CXXFLAGS += -fobjc-arc
+    ios:QMAKE_CXXFLAGS += -fobjc-arc
     ios:QT += gui_private
     ios:LIBS += -F $$IOS_PACKAGE_SOURCE_DIR/GoogleMobileAds -framework GoogleMobileAds \
                 -framework AVFoundation \
