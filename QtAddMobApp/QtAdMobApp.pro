@@ -9,6 +9,7 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QtAdMob
+VERSION = 0.0.1
 TEMPLATE = app
 
 SOURCES += \
@@ -38,7 +39,9 @@ android:
 ios:
 {
     IOS_PACKAGE_SOURCE_DIR = $$QTADMOB_LIB_DIR/platform/ios
+    ios:QMAKE_INFO_PLIST = $$IOS_PACKAGE_SOURCE_DIR/Info.plist
     ios:QMAKE_CXXFLAGS += -fobjc-arc
+    ios:QMAKE_LFLAGS += -ObjC
     ios:QT += gui_private
     ios:LIBS += -F $$IOS_PACKAGE_SOURCE_DIR/GoogleMobileAds -framework GoogleMobileAds \
                 -framework AVFoundation \
