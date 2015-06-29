@@ -21,14 +21,14 @@ public:
     virtual void Initialize();
     virtual void Shutdown();
 
-    virtual void SetAdUnitId(const QString& unitId);
-    virtual void SetAdSize(BannerSize size);
+    virtual void SetUnitId(const QString& unitId);
+    virtual void SetSize(BannerSize size);
+    virtual QSize GetSizeInPixels();
     virtual void SetPosition(const QPoint& position);
-    virtual QSize GetDimensions();
-    virtual bool IsShowed() const;
+    virtual bool IsShow() const;
     virtual bool IsLoaded() const;
-    virtual void ShowAd();
-    virtual void HideAd();
+    virtual void Show();
+    virtual void Hide();
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
 
@@ -40,7 +40,7 @@ private:
 
 private:
 #if defined(__OBJC__)
-    QtAdMobBannerDelegate* m_Delegate;
+    QtAdMobBannerDelegate* m_AdMob;
 #endif
     enum LoadingState
     {

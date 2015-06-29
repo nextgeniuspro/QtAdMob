@@ -1,11 +1,9 @@
-#ifndef QTADMOBBANNER
-#define QTADMOBBANNER
+#ifndef QTADMOBBANNER_H
+#define QTADMOBBANNER_H
 
 #include "QtAdMobBannerAndroid.h"
 #include "QtAdMobBannerIos.h"
 #include "QtAdMobBannerDummy.h"
-
-class QWidget;
 
 inline IQtAdMobBanner* CreateQtAdMobBanner()
 {
@@ -18,5 +16,5 @@ inline IQtAdMobBanner* CreateQtAdMobBanner()
 #endif
 }
 
-#endif // QTADMOBBANNER
+#endif // QTADMOBBANNER_H
 

@@ -12,6 +12,7 @@
 @property (nonatomic, assign) QtAdMobBannerIos *handler;
 
 - (id)initWithHandler:(QtAdMobBannerIos *)handler;
+- (void)load;
 
 @end
 
@@ -26,6 +27,14 @@
         _testDevices = [[NSMutableArray alloc] initWithArray:@[kGADSimulatorID]];
         _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
         _bannerView.delegate = self;
+        
+        UIApplication *application = [UIApplication sharedApplication];
+        UIWindow *window = [[application windows] firstObject];
+        UIViewController* rootViewController = [window rootViewController];
+        UIView *view = rootViewController.view;
+        
+        _bannerView.rootViewController = rootViewController;
+        [view addSubview:_bannerView];
     }
     return self;
 }
@@ -33,6 +42,13 @@
 - (void)dealloc
 {
     _handler = nil;
+}
+
+- (void)load
+{
+    GADRequest *request = [GADRequest request];
+    request.testDevices = _testDevices;
+    [_bannerView loadRequest:request];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
@@ -59,7 +75,7 @@
 @end
 
 QtAdMobBannerIos::QtAdMobBannerIos()
-    : m_Delegate(nil)
+    : m_AdMob(nil)
     , m_LoadingState(Idle)
 {
 }
@@ -75,16 +91,9 @@ void QtAdMobBannerIos::Initialize()
     {
         return;
     }
-
-    UIApplication *application = [UIApplication sharedApplication];
-    UIWindow *window = [[application windows] firstObject];
-    UIViewController* rootViewController = [window rootViewController];
-    UIView *view = rootViewController.view;
     
-    m_Delegate = [[QtAdMobBannerDelegate alloc] initWithHandler:this];
-    m_Delegate.bannerView.rootViewController = rootViewController;
-
-    [view addSubview:m_Delegate.bannerView];
+    
+    m_AdMob = [[QtAdMobBannerDelegate alloc] initWithHandler:this];
 }
 
 void QtAdMobBannerIos::Shutdown()
@@ -94,22 +103,21 @@ void QtAdMobBannerIos::Shutdown()
         return;
     }
     
-    [m_Delegate.bannerView removeFromSuperview];
-    m_Delegate = nil;
+    m_AdMob = nil;
 }
 
-void QtAdMobBannerIos::SetAdUnitId(const QString& unitId)
+void QtAdMobBannerIos::SetUnitId(const QString& unitId)
 {
     if (!IsValid())
     {
         return;
     }
     
-    m_Delegate.bannerView.adUnitID = [NSString stringWithUTF8String:unitId.toUtf8().data()];
+    m_AdMob.bannerView.adUnitID = [NSString stringWithUTF8String:unitId.toUtf8().data()];
     m_LoadingState = Idle;
 }
 
-void QtAdMobBannerIos::SetAdSize(IQtAdMobBanner::BannerSize size)
+void QtAdMobBannerIos::SetSize(IQtAdMobBanner::BannerSize size)
 {
     if (!IsValid())
     {
@@ -139,12 +147,23 @@ void QtAdMobBannerIos::SetAdSize(IQtAdMobBanner::BannerSize size)
             break;
     }
     
-    if (!CGSizeEqualToSize(m_Delegate.bannerView.adSize.size, newSize.size) ||
-        m_Delegate.bannerView.adSize.flags != newSize.flags)
+    if (!CGSizeEqualToSize(m_AdMob.bannerView.adSize.size, newSize.size) ||
+        m_AdMob.bannerView.adSize.flags != newSize.flags)
     {
-        m_Delegate.bannerView.adSize = newSize;
+        m_AdMob.bannerView.adSize = newSize;
         m_LoadingState = Idle;
     }
+}
+
+QSize QtAdMobBannerIos::GetSizeInPixels()
+{
+    if (!IsValid())
+    {
+        return QSize();
+    }
+
+    CGSize size = m_AdMob.bannerView.adSize.size;
+    return QSize(size.width, size.height);
 }
 
 void QtAdMobBannerIos::SetPosition(const QPoint& position)
@@ -154,30 +173,19 @@ void QtAdMobBannerIos::SetPosition(const QPoint& position)
         return;
     }
     
-    CGRect frame = m_Delegate.bannerView.frame;
+    CGRect frame = m_AdMob.bannerView.frame;
     frame.origin = CGPointMake(position.x(), position.y());
-    m_Delegate.bannerView.frame = frame;
+    m_AdMob.bannerView.frame = frame;
 }
 
-QSize QtAdMobBannerIos::GetDimensions()
-{
-    if (!IsValid())
-    {
-        return QSize();
-    }
-    
-    CGSize size = m_Delegate.bannerView.adSize.size;
-    return QSize(size.width, size.height);
-}
-
-bool QtAdMobBannerIos::IsShowed() const
+bool QtAdMobBannerIos::IsShow() const
 {
     if (!IsValid())
     {
         return false;
     }
     
-    return !m_Delegate.bannerView.hidden;
+    return !m_AdMob.bannerView.hidden;
 }
 
 bool QtAdMobBannerIos::IsLoaded() const
@@ -185,7 +193,7 @@ bool QtAdMobBannerIos::IsLoaded() const
     return (m_LoadingState == Loaded);
 }
 
-void QtAdMobBannerIos::ShowAd()
+void QtAdMobBannerIos::Show()
 {
     if (!IsValid())
     {
@@ -194,29 +202,27 @@ void QtAdMobBannerIos::ShowAd()
     
     if (m_LoadingState == Idle)
     {
-        GADRequest *request = [GADRequest request];
-        request.testDevices = m_Delegate.testDevices;
-        [m_Delegate.bannerView loadRequest:request];
+        [m_AdMob load];
         m_LoadingState = Loading;
     }
     
-    m_Delegate.bannerView.hidden = NO;
+    m_AdMob.bannerView.hidden = NO;
 }
 
-void QtAdMobBannerIos::HideAd()
+void QtAdMobBannerIos::Hide()
 {
     if (!IsValid())
     {
         return;
     }
     
-    m_Delegate.bannerView.hidden = YES;
+    m_AdMob.bannerView.hidden = YES;
 }
 
 void QtAdMobBannerIos::AddTestDevice(const QString& hashedDeviceId)
 {
     NSString *deviceId = [NSString stringWithUTF8String:hashedDeviceId.toUtf8().data()];
-    [m_Delegate.testDevices addObject:deviceId];
+    [m_AdMob.testDevices addObject:deviceId];
     
     m_LoadingState = Idle;
 }
@@ -228,7 +234,7 @@ void QtAdMobBannerIos::OnLoad(bool status)
 
 bool QtAdMobBannerIos::IsValid() const
 {
-    return (m_Delegate.bannerView != nil);
+    return (m_AdMob && m_AdMob.bannerView != nil);
 }
 
 #endif // TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
