@@ -173,9 +173,11 @@ void QtAdMobBannerIos::SetPosition(const QPoint& position)
         return;
     }
     
-    CGRect frame = m_AdMob.bannerView.frame;
-    frame.origin = CGPointMake(position.x(), position.y());
-    m_AdMob.bannerView.frame = frame;
+    CGFloat yOffset = [UIApplication sharedApplication].statusBarFrame.size.height;
+
+    CGRect frame = m_Delegate.bannerView.frame;
+    frame.origin = CGPointMake(position.x(), position.y() + yOffset);
+    m_Delegate.bannerView.frame = frame;
 }
 
 bool QtAdMobBannerIos::IsShow() const
