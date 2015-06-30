@@ -36,7 +36,7 @@ MainWindow::~MainWindow()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     UNUSED(event);
-    QPoint position((width() - m_Banner->GetSizeInPixels().width()) * 0.5f, 50.0f);
+    QPoint position((width() - m_Banner->GetSizeInPixels().width()) * 0.5f, 0.0f);
     m_Banner->SetPosition(position);
 }
 

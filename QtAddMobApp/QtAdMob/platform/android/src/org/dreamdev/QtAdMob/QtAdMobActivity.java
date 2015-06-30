@@ -26,6 +26,17 @@ public class QtAdMobActivity extends QtActivity
     private ArrayList<String> m_TestDevices = new ArrayList<String>();
     private int m_AdBannerWidth = 0;
     private int m_AdBannerHeight = 0;
+    private int m_StatusBarHeight = 0;
+
+    private int GetStatusBarHeight()
+    {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
     public void SetAdBannerUnitId(final String adId)
     {
@@ -85,7 +96,7 @@ public class QtAdMobActivity extends QtActivity
                                                                                      FrameLayout.LayoutParams.WRAP_CONTENT);
                 m_AdBannerView.setLayoutParams(layoutParams);
                 m_AdBannerView.setX(x);
-                m_AdBannerView.setY(y);
+                m_AdBannerView.setY(y + m_StatusBarHeight);
             }
         });
     }
@@ -179,6 +190,8 @@ public class QtAdMobActivity extends QtActivity
                     return;
                 }
 
+                m_StatusBarHeight = GetStatusBarHeight();
+
                 m_AdBannerView = new AdView(self);
                 m_AdBannerView.setVisibility(View.GONE);
 
@@ -191,7 +204,7 @@ public class QtAdMobActivity extends QtActivity
                                                                                          FrameLayout.LayoutParams.WRAP_CONTENT);
                     m_AdBannerView.setLayoutParams(layoutParams);
                     m_AdBannerView.setX(0);
-                    m_AdBannerView.setY(0);
+                    m_AdBannerView.setY(m_StatusBarHeight);
                     m_ViewGroup.addView(m_AdBannerView);
 
                     m_AdBannerView.setAdListener(new AdListener()
