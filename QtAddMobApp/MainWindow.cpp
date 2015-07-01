@@ -6,7 +6,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_Banner(0)
     , m_Switch(false)
 {
     ui->setupUi(this);
@@ -30,6 +29,7 @@ MainWindow::~MainWindow()
 {
     m_Banner->Shutdown();
     delete m_Banner;
+    delete m_Interstitial;
     delete ui;
 }
 
