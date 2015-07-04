@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    m_Banner->Shutdown();
     delete m_Banner;
     delete m_Interstitial;
     delete ui;

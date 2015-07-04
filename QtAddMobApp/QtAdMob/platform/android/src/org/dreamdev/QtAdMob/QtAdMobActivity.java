@@ -230,6 +230,7 @@ public class QtAdMobActivity extends QtActivity
                     return;
                 }
 
+                m_IsAdBannerShowed = false;
                 m_ViewGroup.removeView(m_AdBannerView);
                 m_AdBannerView = null;
             }

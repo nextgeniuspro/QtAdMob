@@ -20,6 +20,7 @@ QtAdMobBannerAndroid::QtAdMobBannerAndroid()
 QtAdMobBannerAndroid::~QtAdMobBannerAndroid()
 {
     Hide();
+    Shutdown();
     if (m_Activity)
     {
         delete m_Activity;
