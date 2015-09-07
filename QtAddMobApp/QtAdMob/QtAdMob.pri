@@ -25,3 +25,4 @@ HEADERS  += \
     $$PWD/QtAdMobInterstitialIos.h \
     $$PWD/QtAdMobInterstitialAndroid.h \
     $$PWD/QtAdMobInterstitialDummy.h
+

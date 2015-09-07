@@ -3,7 +3,7 @@
 #if (__ANDROID_API__ >= 9)
 
 #include <QAndroidJniObject>
-#include <QPA/QPlatformNativeInterface.h>
+#include <qpa/qplatformnativeinterface.h>
 #include <QApplication>
 #include "IQtAdMobBanner.h"
 
@@ -49,7 +49,7 @@ bool QtAdMobInterstitialAndroid::IsLoaded() const
 }
 
 void QtAdMobInterstitialAndroid::Show()
-{    
+{
     if (!IsValid())
     {
         return;

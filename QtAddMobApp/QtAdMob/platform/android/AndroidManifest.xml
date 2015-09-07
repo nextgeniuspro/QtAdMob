@@ -44,7 +44,7 @@
             <!-- Background running -->
         </activity>
         <!--Include the AdActivity configChanges and theme. -->
-        <activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent">
+        <activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" android:label="-- %%INSERT_APP_NAME%% --">
             <meta-data android:name="android.app.lib_name" android:value="QtAdMob"/>
         </activity>
     </application>

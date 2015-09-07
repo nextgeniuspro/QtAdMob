@@ -3,7 +3,7 @@
 #if (__ANDROID_API__ >= 9)
 
 #include <QAndroidJniObject>
-#include <QPA/QPlatformNativeInterface.h>
+#include <qpa/qplatformnativeinterface.h>
 #include <QApplication>
 
 QtAdMobBannerAndroid::QtAdMobBannerAndroid()
@@ -77,7 +77,7 @@ QSize QtAdMobBannerAndroid::GetSizeInPixels()
 }
 
 void QtAdMobBannerAndroid::SetPosition(const QPoint& position)
-{    
+{
     if (!IsValid())
     {
         return;

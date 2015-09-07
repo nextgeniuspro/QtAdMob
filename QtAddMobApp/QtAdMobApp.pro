@@ -32,8 +32,12 @@ android:
     android:QT += androidextras gui-private
     android:DISTFILES += \
             $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml \
+            $$ANDROID_PACKAGE_SOURCE_DIR/res/values/ids.xml \
             $$ANDROID_PACKAGE_SOURCE_DIR/project.properties \
-            $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/QtAdMobActivity.java
+            $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/QtAdMobActivity.java \
+            $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/AdMobInterface.java \
+            $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/AdMobAnd.java
+
 }
 
 ios:
@@ -56,4 +60,12 @@ ios:
                 -framework EventKitUI \
                 -framework CoreMedia
 }
+
+DISTFILES += \
+    QtAdMob/platform/android/gradle/wrapper/gradle-wrapper.jar \
+    QtAdMob/platform/android/gradlew \
+    QtAdMob/platform/android/res/values/libs.xml \
+    QtAdMob/platform/android/build.gradle \
+    QtAdMob/platform/android/gradle/wrapper/gradle-wrapper.properties \
+    QtAdMob/platform/android/gradlew.bat \
 
