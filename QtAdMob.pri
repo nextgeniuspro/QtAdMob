@@ -25,3 +25,21 @@ HEADERS  += \
     $$PWD/QtAdMobInterstitialIos.h \
     $$PWD/QtAdMobInterstitialAndroid.h \
     $$PWD/QtAdMobInterstitialDummy.h
+
+ios {
+    ios:QMAKE_CXXFLAGS += -fobjc-arc
+    ios:QMAKE_LFLAGS += -ObjC
+    ios:QT += gui_private
+    ios:LIBS += -F $$PWD/platform/ios/GoogleMobileAds -framework GoogleMobileAds \
+                -framework AVFoundation \
+                -framework AudioToolbox \
+                -framework CoreTelephony \
+                -framework MessageUI \
+                -framework SystemConfiguration \
+                -framework CoreGraphics \
+                -framework AdSupport \
+                -framework StoreKit \
+                -framework EventKit \
+                -framework EventKitUI \
+                -framework CoreMedia
+}

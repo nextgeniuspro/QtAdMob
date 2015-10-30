@@ -3,29 +3,13 @@ QtAdMob it is c++ lib for Qt, which allow to show ads from AdMob on Android and 
 
 # How To Integrate #
 
+Look on [QtAdMobTestApp](https://github.com/yevgeniy-logachev/QtAdMobApp) repository for example of using 
+
 ### IOS ###
 
 - Place QtAdMob lib to your project dir and include it in .pro file
 ```
 include(QtAdMob/QtAdMob.pri)
-```
-- In your project file (.pro) add next libraries and flags:
-```
-ios:QMAKE_CXXFLAGS += -fobjc-arc
-ios:QMAKE_LFLAGS += -ObjC
-ios:QT += gui_private
-ios:LIBS += -F $$PWD/QtAdMob/platform/ios/GoogleMobileAds -framework GoogleMobileAds \
-            -framework AVFoundation \
-            -framework AudioToolbox \
-            -framework CoreTelephony \
-            -framework MessageUI \
-            -framework SystemConfiguration \
-            -framework CoreGraphics \
-            -framework AdSupport \
-            -framework StoreKit \
-            -framework EventKit \
-            -framework EventKitUI \
-            -framework CoreMedia
 ```
 
 ### Android ###
