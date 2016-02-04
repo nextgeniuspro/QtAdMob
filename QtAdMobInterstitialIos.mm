@@ -55,7 +55,7 @@
 
 - (void)interstitialDidReceiveAd:(GADInterstitial *)ad
 {
-    UNUSED(ad);
+    Q_UNUSED(ad);
     
     if (self.handler)
     {
@@ -65,8 +65,8 @@
 
 - (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error
 {
-    UNUSED(ad);
-    UNUSED(error);
+    Q_UNUSED(ad);
+    Q_UNUSED(error);
     
     if (self.handler)
     {

@@ -53,7 +53,7 @@
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
 {
-    UNUSED(view);
+    Q_UNUSED(view);
     
     if (self.handler)
     {
@@ -63,8 +63,8 @@
 
 - (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
 {
-    UNUSED(view);
-    UNUSED(error);
+    Q_UNUSED(view);
+    Q_UNUSED(error);
     
     if (self.handler)
     {

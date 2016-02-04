@@ -11,7 +11,7 @@ QtAdMobInterstitialDummy::~QtAdMobInterstitialDummy()
 
 void QtAdMobInterstitialDummy::LoadWithUnitId(const QString& unitId)
 {
-    UNUSED(unitId);
+    Q_UNUSED(unitId);
 }
 
 bool QtAdMobInterstitialDummy::IsLoaded() const
@@ -25,5 +25,5 @@ void QtAdMobInterstitialDummy::Show()
 
 void QtAdMobInterstitialDummy::AddTestDevice(const QString& hashedDeviceId)
 {
-    UNUSED(hashedDeviceId);
+    Q_UNUSED(hashedDeviceId);
 }

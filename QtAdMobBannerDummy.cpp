@@ -18,12 +18,12 @@ void QtAdMobBannerDummy::Shutdown()
 
 void QtAdMobBannerDummy::SetUnitId(const QString& unitId)
 {
-    UNUSED(unitId);
+    Q_UNUSED(unitId);
 }
 
 void QtAdMobBannerDummy::SetSize(IQtAdMobBanner::BannerSize size)
 {
-    UNUSED(size);
+    Q_UNUSED(size);
 }
 
 QSize QtAdMobBannerDummy::GetSizeInPixels()
@@ -33,7 +33,7 @@ QSize QtAdMobBannerDummy::GetSizeInPixels()
 
 void QtAdMobBannerDummy::SetPosition(const QPoint& position)
 {
-    UNUSED(position);
+    Q_UNUSED(position);
 }
 
 bool QtAdMobBannerDummy::IsShow() const
@@ -56,5 +56,5 @@ void QtAdMobBannerDummy::Hide()
 
 void QtAdMobBannerDummy::AddTestDevice(const QString& hashedDeviceId)
 {
-    UNUSED(hashedDeviceId);
+    Q_UNUSED(hashedDeviceId);
 }

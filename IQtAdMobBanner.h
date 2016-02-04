@@ -5,8 +5,6 @@
 #include <QSize>
 #include <QPoint>
 
-#define UNUSED(x) (void)(x)
-
 class IQtAdMobBanner
 {
 public:
