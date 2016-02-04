@@ -1,329 +1,153 @@
 package org.dreamdev.QtAdMob;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.InterstitialAd;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.util.Log;
+
 import org.qtproject.qt5.android.bindings.QtActivity;
-import org.qtproject.qt5.android.bindings.QtApplication;
-import java.util.ArrayList;
-import android.widget.FrameLayout;
 
-public class QtAdMobActivity extends QtActivity
+public class QtAdMobActivity extends QtActivity implements  AdMobInterface
 {
-    private ViewGroup m_ViewGroup;
-    private AdView m_AdBannerView;
-    private InterstitialAd m_AdInterstitial;
-    private boolean m_IsAdBannerShowed = false;
-    private boolean m_IsAdInterstitiaNeedToShow = false;
-    private boolean m_IsAdBannerLoaded = false;
-    private boolean m_IsAdInterstitialLoaded = false;
-    private ArrayList<String> m_TestDevices = new ArrayList<String>();
-    private int m_AdBannerWidth = 0;
-    private int m_AdBannerHeight = 0;
-    private int m_StatusBarHeight = 0;
+    private AdMobAnd mAdmob = null;
 
-    private int GetStatusBarHeight()
-    {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+    @Override
+    public void AddAdTestDevice(String deviceId) {
+        if(mAdmob != null){
+            mAdmob.AddAdTestDevice(deviceId);
         }
-        return result;
     }
 
-    public void SetAdBannerUnitId(final String adId)
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                m_AdBannerView.setAdUnitId(adId);
-            }
-        });
+    @Override
+    public void SetAdBannerUnitId(String adId) {
+        if(mAdmob != null){
+            mAdmob.SetAdBannerUnitId(adId);
+        }
     }
 
-    public void SetAdBannerSize(final int size)
-    {
-        final QtAdMobActivity self = this;
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                AdSize adSize = AdSize.BANNER;
-                switch(size)
-                {
-                    case 0:
-                        adSize = AdSize.BANNER;
-                    break;
-                    case 1:
-                        adSize = AdSize.FULL_BANNER;
-                    break;
-                    case 2:
-                        adSize = AdSize.LARGE_BANNER;
-                    break;
-                    case 3:
-                        adSize = AdSize.MEDIUM_RECTANGLE;
-                    break;
-                    case 4:
-                        adSize = AdSize.SMART_BANNER;
-                    break;
-                    case 5:
-                        adSize = AdSize.WIDE_SKYSCRAPER;
-                    break;
-                };
-
-                m_AdBannerView.setAdSize(adSize);
-                m_AdBannerWidth = adSize.getWidthInPixels(self);
-                m_AdBannerHeight = adSize.getHeightInPixels(self);
-            }
-        });
+    @Override
+    public void SetAdBannerSize(int size) {
+        if(mAdmob != null){
+            mAdmob.SetAdBannerSize(size);
+        }
     }
 
-    public void SetAdBannerPosition(final int x, final int y)
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                                                     FrameLayout.LayoutParams.WRAP_CONTENT);
-                m_AdBannerView.setLayoutParams(layoutParams);
-                m_AdBannerView.setX(x);
-                m_AdBannerView.setY(y + m_StatusBarHeight);
-            }
-        });
+    @Override
+    public void SetAdBannerPosition(int x, int y) {
+        if(mAdmob != null){
+            mAdmob.SetAdBannerPosition(x,y);
+        }
     }
 
-    public void AddAdTestDevice(final String deviceId)
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                m_TestDevices.add(deviceId);
-            }
-        });
+    @Override
+    public int GetAdBannerWidth() {
+        if(mAdmob != null){
+            return mAdmob.GetAdBannerWidth();
+        }
+        return 0;
     }
 
-    public boolean IsAdBannerShowed()
-    {
-        return m_IsAdBannerShowed;
+    @Override
+    public int GetAdBannerHeight() {
+        if(mAdmob != null){
+            return mAdmob.GetAdBannerHeight();
+        }
+        return 0;
     }
 
-    public boolean IsAdBannerLoaded()
-    {
-        return m_IsAdBannerLoaded;
+    @Override
+    public boolean IsAdBannerShowed() {
+        if(mAdmob != null){
+            return mAdmob.IsAdBannerShowed();
+        }
+        return false;
     }
 
-    public int GetAdBannerWidth()
-    {
-        return m_AdBannerWidth;
+    @Override
+    public boolean IsAdBannerLoaded() {
+        if(mAdmob != null){
+            return mAdmob.IsAdBannerLoaded();
+        }
+        return false;
     }
 
-    public int GetAdBannerHeight()
-    {
-        return m_AdBannerHeight;
+    @Override
+    public void ShowAdBanner() {
+        if(mAdmob != null){
+            mAdmob.ShowAdBanner();
+        }
     }
 
-    public void ShowAdBanner()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (IsAdBannerShowed())
-                {
-                    return;
-                }
-
-                if (!IsAdBannerLoaded())
-                {
-                    AdRequest.Builder adRequest = new AdRequest.Builder();
-                    adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                    for (String deviceId : m_TestDevices) 
-                    {
-                        adRequest.addTestDevice(deviceId);
-                    }
-                    m_AdBannerView.loadAd(adRequest.build());
-                }
-                m_AdBannerView.setVisibility(View.VISIBLE);
-                m_IsAdBannerShowed = true;
-            }
-        });
+    @Override
+    public void HideAdBanner() {
+        if(mAdmob != null){
+            mAdmob.HideAdBanner();
+        }
     }
 
-    public void HideAdBanner()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (!IsAdBannerShowed())
-                {
-                    return;
-                }
-
-                m_AdBannerView.setVisibility(View.GONE);
-                m_IsAdBannerShowed = false;
-            }
-        });
+    @Override
+    public void InitializeAdBanner() {
+        if(mAdmob != null){
+            mAdmob.InitializeAdBanner();
+        }
     }
 
-    public void InitializeAdBanner()
-    {
-        final QtAdMobActivity self = this;
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                if (m_AdBannerView != null)
-                {
-                    return;
-                }
-
-                m_StatusBarHeight = GetStatusBarHeight();
-
-                m_AdBannerView = new AdView(self);
-                m_AdBannerView.setVisibility(View.GONE);
-
-                View view = getWindow().getDecorView().getRootView();
-                if (view instanceof ViewGroup)
-                {
-                    m_ViewGroup = (ViewGroup) view;
-
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                                                         FrameLayout.LayoutParams.WRAP_CONTENT);
-                    m_AdBannerView.setLayoutParams(layoutParams);
-                    m_AdBannerView.setX(0);
-                    m_AdBannerView.setY(m_StatusBarHeight);
-                    m_ViewGroup.addView(m_AdBannerView);
-
-                    m_AdBannerView.setAdListener(new AdListener()
-                    {
-                        public void onAdLoaded()
-                        {
-                            m_IsAdBannerLoaded = true;
-                        }
-                    });
-                }     
-            }
-        });
+    @Override
+    public void ShutdownAdBanner() {
+        if(mAdmob != null){
+            mAdmob.ShutdownAdBanner();
+        }
     }
 
-    public void ShutdownAdBanner()
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                if (m_AdBannerView == null)
-                {
-                    return;
-                }
-
-                m_IsAdBannerShowed = false;
-                m_ViewGroup.removeView(m_AdBannerView);
-                m_AdBannerView = null;
-            }
-        });
+    @Override
+    public void LoadAdInterstitialWithUnitId(String adId) {
+        if(mAdmob != null){
+            mAdmob.LoadAdInterstitialWithUnitId(adId);
+        }
     }
 
-    public void LoadAdInterstitialWithUnitId(final String adId)
-    {
-        final QtAdMobActivity self = this;
-        runOnUiThread(new Runnable()
-        {
-            public void run() 
-            {
-                m_IsAdInterstitialLoaded = false;
-                m_IsAdInterstitiaNeedToShow = false;
-
-                m_AdInterstitial = new InterstitialAd(self);
-                m_AdInterstitial.setAdUnitId(adId);
-                m_AdInterstitial.setAdListener(new AdListener()
-                {
-                    public void onAdLoaded()
-                    {
-                        m_IsAdInterstitialLoaded = true;
-                        ShowAdInterstitial();
-                    }
-                });
-
-                AdRequest.Builder adRequest = new AdRequest.Builder();
-                adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                for (String deviceId : m_TestDevices) 
-                {
-                    adRequest.addTestDevice(deviceId);
-                }
-                m_AdInterstitial.loadAd(adRequest.build());
-            }
-        });
+    @Override
+    public boolean IsAdInterstitialLoaded() {
+        if(mAdmob != null){
+            return mAdmob.IsAdInterstitialLoaded();
+        }
+        return false;
     }
 
-    public boolean IsAdInterstitialLoaded()
-    {
-        return m_IsAdInterstitialLoaded;
-    }
-
-    public void ShowAdInterstitial()
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-                if (m_IsAdInterstitialLoaded)
-                {
-                    m_AdInterstitial.show();
-                    m_IsAdInterstitialLoaded = false; // Ad might be presented only once, need reload
-                }
-                else
-                {
-                    m_IsAdInterstitiaNeedToShow = true;
-                }
-            }
-        });
+    @Override
+    public void ShowAdInterstitial() {
+        if(mAdmob != null){
+            mAdmob.ShowAdInterstitial();
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mAdmob = new AdMobAnd((QtActivity) this);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        if (m_AdBannerView != null)
-        {
-            m_AdBannerView.pause();
+        if(mAdmob != null){
+            mAdmob.pauseBanner();
         }
     }
     @Override
     public void onResume()
     {
         super.onResume();
-        if (m_AdBannerView != null)
-        {
-            m_AdBannerView.resume();
+        if(mAdmob != null) {
+            mAdmob.resumeBanner();
         }
     }
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-        if (m_AdBannerView != null)
-        {
-            m_AdBannerView.destroy();
+        if(mAdmob != null){
+            mAdmob.destroyBanner();
         }
     }
+
 }

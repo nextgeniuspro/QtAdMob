@@ -49,7 +49,7 @@ bool QtAdMobInterstitialAndroid::IsLoaded() const
 }
 
 void QtAdMobInterstitialAndroid::Show()
-{    
+{
     if (!IsValid())
     {
         return;
