@@ -1,12 +1,14 @@
 #ifndef IQTADMOBINTERSTITIAL_H
 #define IQTADMOBINTERSTITIAL_H
 
+#include <QObject>
 #include <QString>
 #include <QSize>
 #include <QPoint>
 
-class IQtAdMobInterstitial
+class IQtAdMobInterstitial : public QObject
 {
+    Q_OBJECT
 public:
     IQtAdMobInterstitial() {}
     virtual ~IQtAdMobInterstitial() {}
@@ -16,6 +18,12 @@ public:
     virtual void Show() = 0;
 
     virtual void AddTestDevice(const QString& hashedDeviceId) = 0;
+
+signals:
+    void OnLoaded();
+    void OnLoading();
+    void OnWillPresent();
+    void OnClosed();
 };
 
 #endif // IQTADMOBINTERSTITIAL_H

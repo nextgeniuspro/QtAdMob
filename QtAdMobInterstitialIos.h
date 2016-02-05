@@ -12,6 +12,7 @@ class QAndroidJniObject;
 
 class QtAdMobInterstitialIos : public IQtAdMobInterstitial
 {
+    friend class QtAdMobInterstitialIosProtected;
 public:
     QtAdMobInterstitialIos();
     virtual ~QtAdMobInterstitialIos();
@@ -22,10 +23,8 @@ public:
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
 
-    // For internal purpose only
-    void OnLoad(bool status);
-    
 private:
+    void OnStatusChanged(bool status);
     bool IsValid() const;
 
 private:

@@ -5,6 +5,53 @@
 #include <GoogleMobileAds/GADInterstitial.h>
 #include "IQtAdMobBanner.h"
 
+class QtAdMobInterstitialIosProtected
+{
+public:
+    QtAdMobInterstitialIosProtected() {};
+    ~QtAdMobInterstitialIosProtected() {};
+
+    static void OnLoaded(QtAdMobInterstitialIos* handler, bool status)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnStatusChanged(status);
+    }
+
+    static void OnLoading(QtAdMobInterstitialIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnLoading();
+    }
+
+    static void OnWillPresent(QtAdMobInterstitialIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnWillPresent();
+    }
+
+    static void OnClosed(QtAdMobInterstitialIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnClosed();
+    }
+};
+
 @interface QtAdMobInterstitialDelegate : NSObject<GADInterstitialDelegate>
 
 @property (nonatomic, strong) GADInterstitial* interstitial;
@@ -34,7 +81,8 @@
 
 - (void)dealloc
 {
-    _handler = nil;
+    _interstitial.delegate = nil;
+    _handler = nullptr;
 }
 
 - (void)load
@@ -42,6 +90,8 @@
     GADRequest *request = [GADRequest request];
     request.testDevices = _testDevices;
     [_interstitial loadRequest:request];
+
+    QtAdMobInterstitialIosProtected::OnLoading(self.handler);
 }
 
 - (void)show
@@ -56,22 +106,32 @@
 - (void)interstitialDidReceiveAd:(GADInterstitial *)ad
 {
     Q_UNUSED(ad);
-    
-    if (self.handler)
-    {
-        self.handler->OnLoad(true);
-    }
+
+    NSLog(@"Did success");
+
+    QtAdMobInterstitialIosProtected::OnLoaded(self.handler, true);
 }
 
 - (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error
 {
     Q_UNUSED(ad);
     Q_UNUSED(error);
+
+    NSLog(@"Did fail");
     
-    if (self.handler)
-    {
-        self.handler->OnLoad(false);
-    }
+    QtAdMobInterstitialIosProtected::OnLoaded(self.handler, false);
+}
+
+- (void)interstitialWillPresentScreen:(GADInterstitial *)ad
+{
+    Q_UNUSED(ad);
+    QtAdMobInterstitialIosProtected::OnWillPresent(self.handler);
+}
+
+- (void)interstitialDidDismissScreen:(GADInterstitial *)ad
+{
+    Q_UNUSED(ad);
+    QtAdMobInterstitialIosProtected::OnClosed(self.handler);
 }
 
 @end
@@ -129,7 +189,7 @@ void QtAdMobInterstitialIos::AddTestDevice(const QString& hashedDeviceId)
     [m_AdMob.testDevices addObject:deviceId];
 }
 
-void QtAdMobInterstitialIos::OnLoad(bool status)
+void QtAdMobInterstitialIos::OnStatusChanged(bool status)
 {
     if (!status)
     {
@@ -139,6 +199,8 @@ void QtAdMobInterstitialIos::OnLoad(bool status)
     {
         [m_AdMob show];
     }
+
+    emit OnLoaded();
 }
 
 bool QtAdMobInterstitialIos::IsValid() const

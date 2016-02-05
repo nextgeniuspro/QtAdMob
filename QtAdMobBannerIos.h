@@ -14,6 +14,7 @@ class QAndroidJniObject;
 
 class QtAdMobBannerIos : public IQtAdMobBanner
 {
+    friend class QtAdMobBannerIosProtected;
 public:
     QtAdMobBannerIos();
     virtual ~QtAdMobBannerIos();
@@ -31,11 +32,9 @@ public:
     virtual void Hide();
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
-
-    // For internal purpose only
-    void OnLoad(bool status);
     
 private:
+    void OnStatusChanged(bool status);
     bool IsValid() const;
 
 private:

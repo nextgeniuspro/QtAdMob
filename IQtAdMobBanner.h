@@ -1,12 +1,14 @@
 #ifndef IQTADMOBBANNER_H
 #define IQTADMOBBANNER_H
 
+#include <QObject>
 #include <QString>
 #include <QSize>
 #include <QPoint>
 
-class IQtAdMobBanner
+class IQtAdMobBanner : public QObject
 {
+    Q_OBJECT
 public:
     enum BannerSize
     {
@@ -35,6 +37,14 @@ public:
     virtual void Hide() = 0;
 
     virtual void AddTestDevice(const QString& hashedDeviceId) = 0;
+
+signals:
+    void OnLoaded();
+    void OnLoading();
+    void OnWillPresent();
+    void OnClosed();
+    void OnWillClose();
+    void OnWillLeaveApplication();
 };
 
 #endif // IQTADMOBBANNER_H

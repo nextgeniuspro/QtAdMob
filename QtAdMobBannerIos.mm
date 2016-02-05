@@ -5,6 +5,73 @@
 #include <GoogleMobileAds/GADBannerView.h>
 #include <GoogleMobileAds/GADAdSize.h>
 
+class QtAdMobBannerIosProtected
+{
+public:
+    QtAdMobBannerIosProtected() {};
+    ~QtAdMobBannerIosProtected() {};
+
+    static void OnLoaded(QtAdMobBannerIos* handler, bool status)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnStatusChanged(status);
+    }
+
+    static void OnLoading(QtAdMobBannerIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnLoading();
+    }
+
+    static void OnWillPresent(QtAdMobBannerIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnWillPresent();
+    }
+
+    static void OnWillClose(QtAdMobBannerIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnWillClose();
+    }
+
+    static void OnClosed(QtAdMobBannerIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnClosed();
+    }
+
+    static void OnWillLeaveApplication(QtAdMobBannerIos* handler)
+    {
+        if (!handler)
+        {
+            return;
+        }
+
+        handler->OnWillLeaveApplication();
+    }
+};
+
 @interface QtAdMobBannerDelegate : NSObject<GADBannerViewDelegate>
 
 @property (nonatomic, strong) GADBannerView* bannerView;
@@ -49,27 +116,51 @@
     GADRequest *request = [GADRequest request];
     request.testDevices = _testDevices;
     [_bannerView loadRequest:request];
+
+    QtAdMobBannerIosProtected::OnLoading(self.handler);
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
 {
     Q_UNUSED(view);
     
-    if (self.handler)
-    {
-        self.handler->OnLoad(true);
-    }
+    QtAdMobBannerIosProtected::OnLoaded(self.handler, true);
 }
 
 - (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
 {
     Q_UNUSED(view);
     Q_UNUSED(error);
-    
-    if (self.handler)
-    {
-        self.handler->OnLoad(false);
-    }
+
+    QtAdMobBannerIosProtected::OnLoaded(self.handler, false);
+}
+
+- (void)adViewWillPresentScreen:(GADBannerView *)bannerView
+{
+    Q_UNUSED(bannerView);
+
+    QtAdMobBannerIosProtected::OnWillPresent(self.handler);
+}
+
+- (void)adViewWillDismissScreen:(GADBannerView *)bannerView
+{
+    Q_UNUSED(bannerView);
+
+    QtAdMobBannerIosProtected::OnWillClose(self.handler);
+}
+
+- (void)adViewDidDismissScreen:(GADBannerView *)bannerView
+{
+    Q_UNUSED(bannerView);
+
+    QtAdMobBannerIosProtected::OnClosed(self.handler);
+}
+
+- (void)adViewWillLeaveApplication:(GADBannerView *)bannerView
+{
+    Q_UNUSED(bannerView);
+
+    QtAdMobBannerIosProtected::OnWillLeaveApplication(self.handler);
 }
 
 @end
@@ -229,9 +320,11 @@ void QtAdMobBannerIos::AddTestDevice(const QString& hashedDeviceId)
     m_LoadingState = Idle;
 }
 
-void QtAdMobBannerIos::OnLoad(bool status)
+void QtAdMobBannerIos::OnStatusChanged(bool status)
 {
     m_LoadingState = (status ? Loaded : Idle);
+
+    emit OnLoaded();
 }
 
 bool QtAdMobBannerIos::IsValid() const
