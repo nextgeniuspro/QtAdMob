@@ -4,6 +4,10 @@
 #
 #-------------------------------------------------
 
+# For android target in main project assign
+# ANDROID_PACKAGE_SOURCE_DIR variable to your
+# manifest location
+
 SOURCES += \
     $$PWD/QtAdMobBannerAndroid.cpp \
     $$PWD/QtAdMobBannerDummy.cpp \
@@ -42,4 +46,21 @@ ios {
                 -framework EventKit \
                 -framework EventKitUI \
                 -framework CoreMedia
+}
+
+android {
+    android:QT += androidextras gui-private
+
+    message("AAA")
+    message($$ANDROID_PACKAGE_SOURCE_DIR)
+
+    !exists($$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob)
+    {
+        copydata.commands += $(COPY_DIR) $$PWD/platform/android/src $$ANDROID_PACKAGE_SOURCE_DIR;
+    }
+
+    first.depends = $(first) copydata
+    export(first.depends)
+    export(copydata.commands)
+    android:QMAKE_EXTRA_TARGETS += first copydata
 }

@@ -18,18 +18,29 @@ include(QtAdMob/QtAdMob.pri)
 ```
 include(QtAdMob/QtAdMob.pri)
 ```
-- Copy src/ and google-play-services_lib/ folders from QtAdMob/platform/android directory to your AndroidManifest.xml location
+
+- Assign in you .pro file varialble ANDROID_PACKAGE_SOURCE_DIR before include QtAdMob/QtAdMob.pri, for ex.
+```
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platform/android
+```
+
 - In AndroidManifest.xml make changes like in picture below:
 ![](https://github.com/yevgeniy-logachev/QtAdMob/blob/master/AndroidManifest.png)
-- In project file (.pro) add next Qt libs
+
+## If you use Gradle automation build system ##
+- Make sure that you have installed Google Repository, Google Play services and Android Support Repository in android sdk
+![](https://github.com/yevgeniy-logachev/QtAdMob/blob/master/AndroidSDK.png)
+- Add dependencies in build.gradle
 ```
-android:QT += androidextras gui-private
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.android.gms:play-services-ads:+'
+}
 ```
+
+## If you use Ant automation build system ##
+- Copy google-play-services_lib/ folders from <android-sdk>/extras/google directory to your AndroidManifest.xml location
 - Create project.properties file if not exists in your AndroidManifest.xml location and add to end of it:
 ```
 android.library.reference.1=./google-play-services_lib/
-```
-- Add path to QtAdMobActivity.java in .pro file:
-```
-android:DISTFILES += <Path_to_manifest_location>/src/org/dreamdev/QtAdMob/QtAdMobActivity.java
 ```
