@@ -29,7 +29,9 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platform/android
 
 ## If you use Gradle automation build system ##
 - Make sure that you have installed Google Repository, Google Play services and Android Support Repository in android sdk
+
 ![](https://github.com/yevgeniy-logachev/QtAdMob/blob/master/AndroidSDK.png)
+
 - Add dependencies in build.gradle
 ```
 dependencies {
@@ -39,7 +41,7 @@ dependencies {
 ```
 
 ## If you use Ant automation build system ##
-- Copy google-play-services_lib/ folders from <android-sdk>/extras/google directory to your AndroidManifest.xml location
+- Copy google-play-services_lib/ folders from android-sdk/extras/google directory to your AndroidManifest.xml location
 - Create project.properties file if not exists in your AndroidManifest.xml location and add to end of it:
 ```
 android.library.reference.1=./google-play-services_lib/
