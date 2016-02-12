@@ -24,6 +24,7 @@ signals:
     void OnLoading();
     void OnWillPresent();
     void OnClosed();
+    void OnClicked();
 };
 
 #endif // IQTADMOBINTERSTITIAL_H

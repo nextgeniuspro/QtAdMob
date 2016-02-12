@@ -10,6 +10,8 @@ class QAndroidJniObject;
 class QtAdMobInterstitialAndroid : public IQtAdMobInterstitial
 {
 public:
+    typedef QMap<uint32_t, QtAdMobInterstitialAndroid*> TInstances;
+
     QtAdMobInterstitialAndroid();
     virtual ~QtAdMobInterstitialAndroid();
 
@@ -19,11 +21,16 @@ public:
 
     virtual void AddTestDevice(const QString& hashedDeviceId);
     
+    static const TInstances& Instances();
+
 private:
     bool IsValid() const;
 
 private:
     QAndroidJniObject* m_Activity;
+    int m_Index;
+    static int s_Index;
+    static TInstances s_Instances;
 };
 
 #endif // __ANDROID_API__

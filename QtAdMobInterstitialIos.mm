@@ -107,8 +107,6 @@ public:
 {
     Q_UNUSED(ad);
 
-    NSLog(@"Did success");
-
     QtAdMobInterstitialIosProtected::OnLoaded(self.handler, true);
 }
 
@@ -116,8 +114,6 @@ public:
 {
     Q_UNUSED(ad);
     Q_UNUSED(error);
-
-    NSLog(@"Did fail");
     
     QtAdMobInterstitialIosProtected::OnLoaded(self.handler, false);
 }

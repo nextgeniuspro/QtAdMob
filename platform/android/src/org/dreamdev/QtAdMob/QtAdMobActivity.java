@@ -17,10 +17,9 @@ import android.widget.FrameLayout;
 public class QtAdMobActivity extends QtActivity
 {
     private ViewGroup m_ViewGroup;
-    private AdView m_AdBannerView;
-    private InterstitialAd m_AdInterstitial;
+    private AdView m_AdBannerView = null;
+    private InterstitialAd m_AdInterstitial = null;
     private boolean m_IsAdBannerShowed = false;
-    private boolean m_IsAdInterstitiaNeedToShow = false;
     private boolean m_IsAdBannerLoaded = false;
     private boolean m_IsAdInterstitialLoaded = false;
     private ArrayList<String> m_TestDevices = new ArrayList<String>();
@@ -146,16 +145,30 @@ public class QtAdMobActivity extends QtActivity
 
                 if (!IsAdBannerLoaded())
                 {
-                    AdRequest.Builder adRequest = new AdRequest.Builder();
-                    adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                    for (String deviceId : m_TestDevices) 
-                    {
-                        adRequest.addTestDevice(deviceId);
-                    }
-                    m_AdBannerView.loadAd(adRequest.build());
+                    RequestBanner();
                 }
                 m_AdBannerView.setVisibility(View.VISIBLE);
                 m_IsAdBannerShowed = true;
+            }
+        });
+    }
+
+    private void RequestBanner()
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onBannerLoading();
+
+                AdRequest.Builder adRequest = new AdRequest.Builder();
+                adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+                for (String deviceId : m_TestDevices) 
+                {
+                    adRequest.addTestDevice(deviceId);
+                }
+                m_AdBannerView.loadAd(adRequest.build());
             }
         });
     }
@@ -212,6 +225,17 @@ public class QtAdMobActivity extends QtActivity
                         public void onAdLoaded()
                         {
                             m_IsAdBannerLoaded = true;
+                            onBannerLoaded();
+                        }
+
+                        public void onAdClosed()
+                        {
+                            onBannerClosed();
+                        }
+
+                        public void onAdLeftApplication()
+                        {
+                            onBannerClicked();
                         }
                     });
                 }     
@@ -244,29 +268,47 @@ public class QtAdMobActivity extends QtActivity
         {
             public void run() 
             {
-                m_IsAdInterstitialLoaded = false;
-                m_IsAdInterstitiaNeedToShow = false;
-
-                m_AdInterstitial = new InterstitialAd(self);
-                m_AdInterstitial.setAdUnitId(adId);
-                m_AdInterstitial.setAdListener(new AdListener()
+                if (m_AdInterstitial == null)
                 {
-                    public void onAdLoaded()
+                    m_IsAdInterstitialLoaded = false;
+
+                    m_AdInterstitial = new InterstitialAd(self);
+                    m_AdInterstitial.setAdUnitId(adId);
+                    m_AdInterstitial.setAdListener(new AdListener()
                     {
-                        m_IsAdInterstitialLoaded = true;
-                        ShowAdInterstitial();
-                    }
-                });
+                        public void onAdLoaded()
+                        {
+                            m_IsAdInterstitialLoaded = true;
+                            onInterstitialLoaded();
+                        }
 
-                AdRequest.Builder adRequest = new AdRequest.Builder();
-                adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                for (String deviceId : m_TestDevices) 
-                {
-                    adRequest.addTestDevice(deviceId);
+                        public void onAdClosed() 
+                        {
+                            onInterstitialClosed();
+                        }
+
+                        public void onAdLeftApplication()
+                        {
+                            onInterstitialClicked();
+                        }
+                    });
                 }
-                m_AdInterstitial.loadAd(adRequest.build());
+                RequestNewInterstitial();
             }
         });
+    }
+
+    private void RequestNewInterstitial()
+    {
+        onInterstitialLoading();
+
+        AdRequest.Builder adRequest = new AdRequest.Builder();
+        adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+        for (String deviceId : m_TestDevices) 
+        {
+            adRequest.addTestDevice(deviceId);
+        }
+        m_AdInterstitial.loadAd(adRequest.build());
     }
 
     public boolean IsAdInterstitialLoaded()
@@ -282,12 +324,10 @@ public class QtAdMobActivity extends QtActivity
             {
                 if (m_IsAdInterstitialLoaded)
                 {
+                    onInterstitialWillPresent();
+
                     m_AdInterstitial.show();
                     m_IsAdInterstitialLoaded = false; // Ad might be presented only once, need reload
-                }
-                else
-                {
-                    m_IsAdInterstitiaNeedToShow = true;
                 }
             }
         });
@@ -326,4 +366,15 @@ public class QtAdMobActivity extends QtActivity
             m_AdBannerView.destroy();
         }
     }
+
+    private static native void onBannerLoaded();
+    private static native void onBannerLoading();
+    private static native void onBannerClosed();
+    private static native void onBannerClicked();
+
+    private static native void onInterstitialLoaded();
+    private static native void onInterstitialLoading();
+    private static native void onInterstitialWillPresent();
+    private static native void onInterstitialClosed();
+    private static native void onInterstitialClicked();
 }

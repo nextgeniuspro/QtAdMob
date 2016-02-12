@@ -41,10 +41,8 @@ public:
 signals:
     void OnLoaded();
     void OnLoading();
-    void OnWillPresent();
     void OnClosed();
-    void OnWillClose();
-    void OnWillLeaveApplication();
+    void OnClicked();
 };
 
 #endif // IQTADMOBBANNER_H

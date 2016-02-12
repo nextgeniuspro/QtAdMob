@@ -41,7 +41,7 @@ dependencies {
 ```
 
 ## If you use Ant automation build system ##
-- Copy google-play-services_lib/ folders from android-sdk/extras/google directory to your AndroidManifest.xml location
+- Copy google-play-services_lib/ folders from android-sdk/extras/google/google_play_services/libproject/ directory to your AndroidManifest.xml location
 - Create project.properties file if not exists in your AndroidManifest.xml location and add to end of it:
 ```
 android.library.reference.1=./google-play-services_lib/

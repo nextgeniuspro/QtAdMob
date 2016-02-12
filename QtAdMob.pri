@@ -51,9 +51,6 @@ ios {
 android {
     android:QT += androidextras gui-private
 
-    message("AAA")
-    message($$ANDROID_PACKAGE_SOURCE_DIR)
-
     !exists($$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob)
     {
         copydata.commands += $(COPY_DIR) $$PWD/platform/android/src $$ANDROID_PACKAGE_SOURCE_DIR;
