@@ -31,26 +31,6 @@ public:
         handler->OnLoading();
     }
 
-    static void OnWillPresent(QtAdMobBannerIos* handler)
-    {
-        if (!handler)
-        {
-            return;
-        }
-
-        handler->OnWillPresent();
-    }
-
-    static void OnWillClose(QtAdMobBannerIos* handler)
-    {
-        if (!handler)
-        {
-            return;
-        }
-
-        handler->OnWillClose();
-    }
-
     static void OnClosed(QtAdMobBannerIos* handler)
     {
         if (!handler)
@@ -68,7 +48,7 @@ public:
             return;
         }
 
-        handler->OnWillLeaveApplication();
+        handler->OnClicked();
     }
 };
 
@@ -133,20 +113,6 @@ public:
     Q_UNUSED(error);
 
     QtAdMobBannerIosProtected::OnLoaded(self.handler, false);
-}
-
-- (void)adViewWillPresentScreen:(GADBannerView *)bannerView
-{
-    Q_UNUSED(bannerView);
-
-    QtAdMobBannerIosProtected::OnWillPresent(self.handler);
-}
-
-- (void)adViewWillDismissScreen:(GADBannerView *)bannerView
-{
-    Q_UNUSED(bannerView);
-
-    QtAdMobBannerIosProtected::OnWillClose(self.handler);
 }
 
 - (void)adViewDidDismissScreen:(GADBannerView *)bannerView
