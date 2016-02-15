@@ -23,6 +23,14 @@ include(QtAdMob/QtAdMob.pri)
 ```
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/platform/android
 ```
+- Add QtAdMobActivity.java to list of android DISTFILES in your .pro file
+```
+android:
+{
+	DISTFILES += \
+    	        $$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtAdMob/QtAdMobActivity.java \
+}
+```
 
 - In AndroidManifest.xml make changes like in picture below:
 ![](https://github.com/yevgeniy-logachev/QtAdMob/blob/master/AndroidManifest.png)
