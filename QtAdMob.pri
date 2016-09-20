@@ -8,6 +8,8 @@
 # ANDROID_PACKAGE_SOURCE_DIR variable to your
 # manifest location
 
+VERSION = 1.0.0
+
 SOURCES += \
     $$PWD/QtAdMobBannerAndroid.cpp \
     $$PWD/QtAdMobBannerDummy.cpp \
