@@ -1,5 +1,7 @@
 #include "QtAdMobInterstitial.h"
+#ifdef QTADMOB_QML
 #include <QtQml>
+#endif
 
 QmlAdMobInterstitial::QmlAdMobInterstitial()
 {
@@ -19,7 +21,9 @@ QmlAdMobInterstitial::~QmlAdMobInterstitial()
 
 void QmlAdMobInterstitial::DeclareQML()
 {
+#ifdef QTADMOB_QML
     qmlRegisterType<QmlAdMobInterstitial>("com.dreamdev.QtAdMobInterstitial", 1, 0, "AdMobInterstitial");
+#endif
 }
 
 void QmlAdMobInterstitial::setUnitId(const QString& unitId)

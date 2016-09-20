@@ -1,5 +1,7 @@
 #include "QtAdMobBanner.h"
+#ifdef QTADMOB_QML
 #include <QtQml>
+#endif
 
 QmlAdMobBanner::QmlAdMobBanner()
 {
@@ -18,7 +20,9 @@ QmlAdMobBanner::~QmlAdMobBanner()
 
 void QmlAdMobBanner::DeclareQML()
 {
+#ifdef QTADMOB_QML
     qmlRegisterType<QmlAdMobBanner>("com.dreamdev.QtAdMobBanner", 1, 0, "AdMobBanner");
+#endif
 }
 
 void QmlAdMobBanner::setUnitId(const QString& unitId)
