@@ -1,12 +1,12 @@
 # QtAdMob #
-QtAdMob it is c++ lib for Qt, which allow to show ads from AdMob on Android and iOS platforms
+QtAdMob it is C++ lib for Qt with QML support, which allow to show ads from AdMob on Android and iOS platforms
 
 ver. 1.0.0 - QML is supported now!
 
 # How To Use #
 
 ### QML ###
-If your app uses qml, next steps will explain add QtAdMob with qml
+If your app uses qml, next steps will explain how to add QtAdMob with qml
 
 - Add QTADMOB_QML flag to DEFINES in proect file
 ```
@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
 }
 ```
 - In qml file import com.dreamdev.QtAdMobBanner or com.dreamdev.QtAdMobInterstitial for banner and interstitial support
+```
+import com.dreamdev.QtAdMobBanner 1.0
+import com.dreamdev.QtAdMobInterstitial 1.0
+```
+
 - Declare AdMobBanner object in your qml file if you want to see banner. Setup all properties in onCompleted signal
 ```
 AdMobBanner
@@ -42,7 +47,7 @@ AdMobBanner
     }
 }
 ```
-- Declare AdMobInterstitial object in your qml file if you want to see banner. Setup all properties in onCompleted signal. After interstitial has been watched it must be reinitialized with their unitId, better solution for it is setupping unitId in onClosed signal handler.
+- Declare AdMobInterstitial object in your qml file if you want to see banner. Setup all properties in onCompleted signal. After interstitial has been showed it must be reinitialized with their unitId, better solution for it is setupping unitId in onClosed signal handler.
 ```
 AdMobInterstitial
 {
@@ -59,7 +64,7 @@ AdMobInterstitial
 ```
 
 ### Widgets ###
-If your app uses qt widgets, next steps will explain add QtAdMob with widgets
+If your app uses qt widgets, next steps will explain how to add QtAdMob with widgets
 
 - Create banner object and setup its parameters
 ```
