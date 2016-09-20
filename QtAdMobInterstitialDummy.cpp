@@ -9,21 +9,32 @@ QtAdMobInterstitialDummy::~QtAdMobInterstitialDummy()
 {
 }
 
-void QtAdMobInterstitialDummy::LoadWithUnitId(const QString& unitId)
+void QtAdMobInterstitialDummy::setUnitId(const QString& unitId)
 {
-    Q_UNUSED(unitId);
+    m_UnitId = unitId;
 }
 
-bool QtAdMobInterstitialDummy::IsLoaded() const
+const QString& QtAdMobInterstitialDummy::unitId() const
+{
+    return m_UnitId;
+}
+
+void QtAdMobInterstitialDummy::setVisible(bool isVisible)
+{
+    Q_UNUSED(isVisible);
+}
+
+bool QtAdMobInterstitialDummy::visible()
 {
     return false;
 }
 
-void QtAdMobInterstitialDummy::Show()
-{    
+bool QtAdMobInterstitialDummy::isLoaded()
+{
+    return false;
 }
 
-void QtAdMobInterstitialDummy::AddTestDevice(const QString& hashedDeviceId)
+void QtAdMobInterstitialDummy::addTestDevice(const QString& hashedDeviceId)
 {
     Q_UNUSED(hashedDeviceId);
 }

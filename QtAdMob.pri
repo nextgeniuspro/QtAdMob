@@ -12,7 +12,9 @@ SOURCES += \
     $$PWD/QtAdMobBannerAndroid.cpp \
     $$PWD/QtAdMobBannerDummy.cpp \
     $$PWD/QtAdMobInterstitialAndroid.cpp \
-    $$PWD/QtAdMobInterstitialDummy.cpp
+    $$PWD/QtAdMobInterstitialDummy.cpp \
+    $$PWD/QtAdmobBanner.cpp \
+    $$PWD/QtAdmobInterstitial.cpp
 
 OBJECTIVE_SOURCES += \
     $$PWD/QtAdMobBannerIos.mm \
@@ -45,7 +47,8 @@ ios {
                 -framework StoreKit \
                 -framework EventKit \
                 -framework EventKitUI \
-                -framework CoreMedia
+                -framework CoreMedia \
+                -framework MediaPlayer
 }
 
 android {

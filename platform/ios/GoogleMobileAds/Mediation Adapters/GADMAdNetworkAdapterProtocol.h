@@ -77,6 +77,15 @@
 /// encountered an error.
 - (void)getNativeAdWithAdTypes:(NSArray *)adTypes options:(NSArray *)options;
 
+/// Indicates if the adapter handles user clicks. Return YES if the adapter should handle user
+/// clicks. In this case Google Mobile Ads SDK doesn't track user click and the adapter should
+/// notify the click to Google Mobile Ads SDK using method
+/// + [GADMediatedNativeAdNotificationSource mediatedNativeAdDidRecordClick:]. Return NO if the
+/// adapter doesn't handles user clicks. In this case Google Mobile Ads SDK will track user clicks
+/// and the adapter is notified about the user clicks using method - [GADMediatedNativeAdDelegate
+/// mediatedNativeAd:didRecordClickOnAssetWithName:view:viewController:].
+- (BOOL)handlesUserClicks;
+
 /// If your ad network handles multiple ad sizes for the same banner ad, implement this method to
 /// know when the user changes the banner size. This is typically changing from
 /// kGADAdSizeSmartBannerPortrait to kGADAdSizeSmartBannerLandscape, or vice versa. If this method

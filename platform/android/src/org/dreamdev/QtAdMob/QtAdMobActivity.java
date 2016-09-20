@@ -26,6 +26,7 @@ public class QtAdMobActivity extends QtActivity
     private int m_AdBannerWidth = 0;
     private int m_AdBannerHeight = 0;
     private int m_StatusBarHeight = 0;
+    private int m_ReadyToRequest = 0x00;
 
     private int GetStatusBarHeight()
     {
@@ -41,9 +42,14 @@ public class QtAdMobActivity extends QtActivity
     {
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 m_AdBannerView.setAdUnitId(adId);
+                m_ReadyToRequest |= 0x01;
+                if (m_ReadyToRequest == 0x03 && !IsAdBannerLoaded())
+                {
+                    RequestBanner();
+                }
             }
         });
     }
@@ -53,7 +59,7 @@ public class QtAdMobActivity extends QtActivity
         final QtAdMobActivity self = this;
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 AdSize adSize = AdSize.BANNER;
                 switch(size)
@@ -81,6 +87,12 @@ public class QtAdMobActivity extends QtActivity
                 m_AdBannerView.setAdSize(adSize);
                 m_AdBannerWidth = adSize.getWidthInPixels(self);
                 m_AdBannerHeight = adSize.getHeightInPixels(self);
+
+                m_ReadyToRequest |= 0x02;
+                if (m_ReadyToRequest == 0x03 && !IsAdBannerLoaded())
+                {
+                    RequestBanner();
+                }
             }
         });
     }
@@ -104,7 +116,7 @@ public class QtAdMobActivity extends QtActivity
     {
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 m_TestDevices.add(deviceId);
             }
@@ -113,7 +125,7 @@ public class QtAdMobActivity extends QtActivity
 
     public boolean IsAdBannerShowed()
     {
-        return m_IsAdBannerShowed;
+        return m_IsAdBannerShowed && m_IsAdBannerLoaded;
     }
 
     public boolean IsAdBannerLoaded()
@@ -143,7 +155,7 @@ public class QtAdMobActivity extends QtActivity
                     return;
                 }
 
-                if (!IsAdBannerLoaded())
+                if (m_ReadyToRequest == 0x03 && !IsAdBannerLoaded())
                 {
                     RequestBanner();
                 }
@@ -164,7 +176,7 @@ public class QtAdMobActivity extends QtActivity
 
                 AdRequest.Builder adRequest = new AdRequest.Builder();
                 adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-                for (String deviceId : m_TestDevices) 
+                for (String deviceId : m_TestDevices)
                 {
                     adRequest.addTestDevice(deviceId);
                 }
@@ -196,7 +208,7 @@ public class QtAdMobActivity extends QtActivity
         final QtAdMobActivity self = this;
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 if (m_AdBannerView != null)
                 {
@@ -238,7 +250,7 @@ public class QtAdMobActivity extends QtActivity
                             onBannerClicked();
                         }
                     });
-                }     
+                }
             }
         });
     }
@@ -247,7 +259,7 @@ public class QtAdMobActivity extends QtActivity
     {
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 if (m_AdBannerView == null)
                 {
@@ -266,7 +278,7 @@ public class QtAdMobActivity extends QtActivity
         final QtAdMobActivity self = this;
         runOnUiThread(new Runnable()
         {
-            public void run() 
+            public void run()
             {
                 if (m_AdInterstitial == null)
                 {
@@ -278,11 +290,14 @@ public class QtAdMobActivity extends QtActivity
                     {
                         public void onAdLoaded()
                         {
+                            m_AdBannerView.setVisibility(View.VISIBLE);
+                            m_IsAdBannerShowed = true;
+
                             m_IsAdInterstitialLoaded = true;
                             onInterstitialLoaded();
                         }
 
-                        public void onAdClosed() 
+                        public void onAdClosed()
                         {
                             onInterstitialClosed();
                         }
@@ -304,7 +319,7 @@ public class QtAdMobActivity extends QtActivity
 
         AdRequest.Builder adRequest = new AdRequest.Builder();
         adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-        for (String deviceId : m_TestDevices) 
+        for (String deviceId : m_TestDevices)
         {
             adRequest.addTestDevice(deviceId);
         }

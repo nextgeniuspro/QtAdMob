@@ -25,11 +25,10 @@
 - (instancetype)initWithRewardBasedVideoAdNetworkConnector:
         (id<GADMRewardBasedVideoAdNetworkConnector>)connector;
 
-/// Tells the adapter to set up reward based video ads with the provided user ID. The adapter should
-/// notify the Google Mobile Ads SDK whether set up has succeeded or failed using callbacks provided
-/// in the connector. When set up fails, the Google Mobile Ads SDK may try to set up the adapter
-/// again.
-- (void)setUpWithUserID:(NSString *)userID;
+/// Tells the adapter to set up reward based video ads. The adapter should notify the Google Mobile
+/// Ads SDK whether set up has succeeded or failed using callbacks provided in the connector. When
+/// set up fails, the Google Mobile Ads SDK may try to set up the adapter again.
+- (void)setUp;
 
 /// Tells the adapter to request a reward based video ad. This method is called after the adapter
 /// has been set up. The adapter should notify the Google Mobile Ads SDK if the request succeeds or
@@ -50,5 +49,11 @@
 /// to the provided connector.
 - (instancetype)initWithGADMAdNetworkConnector:(id<GADMRewardBasedVideoAdNetworkConnector>)connector
     GAD_DEPRECATED_MSG_ATTRIBUTE("Use initWithRewardBasedVideoAdNetworkConnector:.");
+
+/// Tells the adapter to set up reward based video ads with the provided user ID. The adapter should
+/// notify the Google Mobile Ads SDK whether set up has succeeded or failed using callbacks provided
+/// in the connector. When set up fails, the Google Mobile Ads SDK may try to set up the adapter
+/// again.
+- (void)setUpWithUserID:(NSString *)userID GAD_DEPRECATED_MSG_ATTRIBUTE("Use setUp.");
 
 @end

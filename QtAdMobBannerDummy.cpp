@@ -1,6 +1,7 @@
 #include "QtAdMobBannerDummy.h"
 
 QtAdMobBannerDummy::QtAdMobBannerDummy()
+    : m_BannerSize(IQtAdMobBanner::Banner)
 {
 }
 
@@ -8,53 +9,57 @@ QtAdMobBannerDummy::~QtAdMobBannerDummy()
 {
 }
 
-void QtAdMobBannerDummy::Initialize()
+void QtAdMobBannerDummy::setUnitId(const QString& unitId)
 {
+    m_UnitId = unitId;
 }
 
-void QtAdMobBannerDummy::Shutdown()
+const QString& QtAdMobBannerDummy::unitId() const
 {
+    return m_UnitId;
 }
 
-void QtAdMobBannerDummy::SetUnitId(const QString& unitId)
+void QtAdMobBannerDummy::setSize(IQtAdMobBanner::Sizes size)
 {
-    Q_UNUSED(unitId);
+    m_BannerSize = size;
 }
 
-void QtAdMobBannerDummy::SetSize(IQtAdMobBanner::BannerSize size)
+IQtAdMobBanner::Sizes QtAdMobBannerDummy::size() const
 {
-    Q_UNUSED(size);
+    return m_BannerSize;
 }
 
-QSize QtAdMobBannerDummy::GetSizeInPixels()
+QSize QtAdMobBannerDummy::sizeInPixels()
 {
     return QSize();
 }
 
-void QtAdMobBannerDummy::SetPosition(const QPoint& position)
+void QtAdMobBannerDummy::setPosition(const QPoint& position)
 {
-    Q_UNUSED(position);
+    m_Position = position;
 }
 
-bool QtAdMobBannerDummy::IsShow() const
+const QPoint& QtAdMobBannerDummy::position() const
+{
+    return m_Position;
+}
+
+void QtAdMobBannerDummy::setVisible(bool isVisible)
+{
+    Q_UNUSED(isVisible);
+}
+
+bool QtAdMobBannerDummy::visible()
 {
     return false;
 }
 
-bool QtAdMobBannerDummy::IsLoaded() const
+bool QtAdMobBannerDummy::isLoaded()
 {
     return false;
 }
 
-void QtAdMobBannerDummy::Show()
-{
-}
-
-void QtAdMobBannerDummy::Hide()
-{
-}
-
-void QtAdMobBannerDummy::AddTestDevice(const QString& hashedDeviceId)
+void QtAdMobBannerDummy::addTestDevice(const QString& hashedDeviceId)
 {
     Q_UNUSED(hashedDeviceId);
 }

@@ -10,7 +10,7 @@ class IQtAdMobBanner : public QObject
 {
     Q_OBJECT
 public:
-    enum BannerSize
+    enum Sizes
     {
         Banner = 0,
         FullBanner,
@@ -19,30 +19,71 @@ public:
         SmartBanner,
         WideSkyscraper
     };
+    Q_ENUMS(Sizes)
 
-public:
-    IQtAdMobBanner() {}
+    IQtAdMobBanner(QObject* parent = 0) : QObject(parent) {}
     virtual ~IQtAdMobBanner() {}
 
-    virtual void Initialize() = 0;
-    virtual void Shutdown() = 0;
+    /*
+     * Configure banner id
+     */
+    virtual void setUnitId(const QString& unitId) = 0;
 
-    virtual void SetUnitId(const QString& unitId) = 0;
-    virtual void SetSize(BannerSize size) = 0;
-    virtual QSize GetSizeInPixels() = 0;
-    virtual void SetPosition(const QPoint& position) = 0;
-    virtual bool IsShow() const = 0;
-    virtual bool IsLoaded() const = 0;
-    virtual void Show() = 0;
-    virtual void Hide() = 0;
+    /*
+     * Retrive banner id
+     */
+    virtual const QString& unitId() const = 0;
 
-    virtual void AddTestDevice(const QString& hashedDeviceId) = 0;
+    /*
+     * Setup preconfigured banner size
+     */
+    virtual void setSize(Sizes size) = 0;
+
+    /*
+     * Retrieve banner size
+     */
+    virtual Sizes size() const = 0;
+
+    /*
+     * Get real banner size in pixels
+     */
+    virtual QSize sizeInPixels() = 0;
+
+    /*
+     * Setup banner position
+     */
+    virtual void setPosition(const QPoint& position) = 0;
+
+    /*
+     * Retrieve banner position
+     */
+    virtual const QPoint& position() const = 0;
+
+    /*
+     * Show banner
+     */
+    virtual void setVisible(bool isVisible) = 0;
+
+    /*
+     * Is banner showed
+     */
+    virtual bool visible() = 0;
+
+    /*
+     * Is banner loaded
+     */
+    virtual bool isLoaded() = 0;
+
+    /*
+     * Add test device identifier
+     */
+    virtual void addTestDevice(const QString& hashedDeviceId) = 0;
 
 signals:
-    void OnLoaded();
-    void OnLoading();
-    void OnClosed();
-    void OnClicked();
+    void loaded();
+    void loading();
+    void closed();
+    void clicked();
 };
 
 #endif // IQTADMOBBANNER_H

@@ -10,23 +10,53 @@ class QAndroidJniObject;
 class QtAdMobInterstitialAndroid : public IQtAdMobInterstitial
 {
 public:
-    typedef QMap<uint32_t, QtAdMobInterstitialAndroid*> TInstances;
-
     QtAdMobInterstitialAndroid();
     virtual ~QtAdMobInterstitialAndroid();
 
-    virtual void LoadWithUnitId(const QString& unitId);
-    virtual bool IsLoaded() const;
-    virtual void Show();
+    /*
+     * Setup unit id and start caching interstitial for that id
+     */
+    virtual void setUnitId(const QString& unitId);
 
-    virtual void AddTestDevice(const QString& hashedDeviceId);
+    /*
+     * Retrive interstitial id
+     */
+    virtual const QString& unitId() const;
+
+    /*
+     * If interstitial has already loaded it will be presented, another
+     * case it will be showed after loading finished
+     */
+    virtual void setVisible(bool isVisible);
+
+    /*
+     * Is interstitial visible
+     */
+    virtual bool visible();
+
+    /*
+     * Check if interstitial loaded
+     */
+    virtual bool isLoaded();
+
+    /*
+     * Add test device identifier. Device identifier you can find in output log, on Android
+     * it will looks like 'Ads : Use AdRequest.Builder.addTestDevice("device id") to get test ads on this device.'
+     * iOS: // TODO:
+     */
+    virtual void addTestDevice(const QString& hashedDeviceId);
     
+    /*
+     * For internal purpose only
+     */
+    typedef QMap<uint32_t, QtAdMobInterstitialAndroid*> TInstances;
     static const TInstances& Instances();
 
 private:
-    bool IsValid() const;
+    bool isValid() const;
 
 private:
+    QString m_UnitId;
     QAndroidJniObject* m_Activity;
     int m_Index;
     static int s_Index;

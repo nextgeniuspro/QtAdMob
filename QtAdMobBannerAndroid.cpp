@@ -4,7 +4,7 @@
 
 #include <QAndroidJniObject>
 #include <qpa/qplatformnativeinterface.h>
-#include <QApplication>
+#include <QGuiApplication>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,7 +20,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onBannerLoaded(
     QtAdMobBannerAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnLoaded();
+        emit beg.value()->loaded();
 
         beg++;
     }
@@ -36,7 +36,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onBannerLoading
     QtAdMobBannerAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnLoading();
+        emit beg.value()->loading();
 
         beg++;
     }
@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onBannerClosed(
     QtAdMobBannerAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnClosed();
+        emit beg.value()->closed();
 
         beg++;
     }
@@ -68,7 +68,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onBannerClicked
     QtAdMobBannerAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnClicked();
+        emit beg.value()->clicked();
 
         beg++;
     }
@@ -82,73 +82,72 @@ int QtAdMobBannerAndroid::s_Index = 0;
 QtAdMobBannerAndroid::TInstances QtAdMobBannerAndroid::s_Instances;
 
 QtAdMobBannerAndroid::QtAdMobBannerAndroid()
-    : m_Activity(0)
+    : m_BannerSize(IQtAdMobBanner::Banner)
+    , m_Activity(0)
     , m_Index(s_Index++)
 {
     s_Instances[m_Index] = this;
 
-    QPlatformNativeInterface* interface = QApplication::platformNativeInterface();
+    QPlatformNativeInterface* interface = QGuiApplication::platformNativeInterface();
     jobject activity = (jobject)interface->nativeResourceForIntegration("QtActivity");
     if (activity)
     {
         m_Activity = new QAndroidJniObject(activity);
     }
+
+    m_Activity->callMethod<void>("InitializeAdBanner");
 }
 
 QtAdMobBannerAndroid::~QtAdMobBannerAndroid()
 {
     s_Instances.remove(m_Index);
 
-    Hide();
-    Shutdown();
+    setVisible(false);
+    if (isValid())
+    {
+        m_Activity->callMethod<void>("ShutdownAdBanner");
+    }
+
     if (m_Activity)
     {
         delete m_Activity;
     }
 }
 
-void QtAdMobBannerAndroid::Initialize()
+void QtAdMobBannerAndroid::setUnitId(const QString& unitId)
 {
-    if (!IsValid())
-    {
-        return;
-    }
-
-    m_Activity->callMethod<void>("InitializeAdBanner");
-}
-
-void QtAdMobBannerAndroid::Shutdown()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-
-    m_Activity->callMethod<void>("ShutdownAdBanner");
-}
-
-void QtAdMobBannerAndroid::SetUnitId(const QString& unitId)
-{
-    if (!IsValid())
+    if (!isValid())
     {
         return;
     }
 
     QAndroidJniObject param1 = QAndroidJniObject::fromString(unitId);
     m_Activity->callMethod<void>("SetAdBannerUnitId", "(Ljava/lang/String;)V", param1.object<jstring>());
+    m_UnitId = unitId;
 }
 
-void QtAdMobBannerAndroid::SetSize(IQtAdMobBanner::BannerSize size)
+const QString& QtAdMobBannerAndroid::unitId() const
 {
-    if (!IsValid())
+    return m_UnitId;
+}
+
+void QtAdMobBannerAndroid::setSize(IQtAdMobBanner::Sizes size)
+{
+    if (!isValid())
     {
         return;
     }
 
     m_Activity->callMethod<void>("SetAdBannerSize", "(I)V", (int)size);
+    m_BannerSize = size;
 }
 
-QSize QtAdMobBannerAndroid::GetSizeInPixels()
+IQtAdMobBanner::Sizes QtAdMobBannerAndroid::size() const
+{
+    return m_BannerSize;
+}
+
+QSize QtAdMobBannerAndroid::sizeInPixels()
 {
     int width = m_Activity->callMethod<int>("GetAdBannerWidth");
     int height = m_Activity->callMethod<int>("GetAdBannerHeight");
@@ -156,30 +155,53 @@ QSize QtAdMobBannerAndroid::GetSizeInPixels()
     return QSize(width, height);
 }
 
-void QtAdMobBannerAndroid::SetPosition(const QPoint& position)
+void QtAdMobBannerAndroid::setPosition(const QPoint& position)
 {    
-    if (!IsValid())
+    if (!isValid())
     {
         return;
     }
 
     m_Activity->callMethod<void>("SetAdBannerPosition", "(II)V", position.x(), position.y());
+    m_Position = position;
 }
 
-bool QtAdMobBannerAndroid::IsShow() const
+const QPoint& QtAdMobBannerAndroid::position() const
 {
-    if (!IsValid())
+    return m_Position;
+}
+
+void QtAdMobBannerAndroid::setVisible(bool isVisible)
+{
+    if (!isValid())
+    {
+        return;
+    }
+
+    if (isVisible)
+    {
+        m_Activity->callMethod<void>("ShowAdBanner");
+    }
+    else
+    {
+        m_Activity->callMethod<void>("HideAdBanner");
+    }
+}
+
+bool QtAdMobBannerAndroid::visible()
+{
+    if (!isValid())
     {
         return false;
     }
 
-    bool isShow = m_Activity->callMethod<jboolean>("IsAdBannerShowed", "()Z");
-    return isShow;
+    bool isVisible = m_Activity->callMethod<jboolean>("IsAdBannerShowed", "()Z");
+    return isVisible;
 }
 
-bool QtAdMobBannerAndroid::IsLoaded() const
+bool QtAdMobBannerAndroid::isLoaded()
 {
-    if (!IsValid())
+    if (!isValid())
     {
         return false;
     }
@@ -188,29 +210,9 @@ bool QtAdMobBannerAndroid::IsLoaded() const
     return isLoaded;
 }
 
-void QtAdMobBannerAndroid::Show()
+void QtAdMobBannerAndroid::addTestDevice(const QString& hashedDeviceId)
 {
-    if (!IsValid())
-    {
-        return;
-    }
-
-    m_Activity->callMethod<void>("ShowAdBanner");
-}
-
-void QtAdMobBannerAndroid::Hide()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-
-    m_Activity->callMethod<void>("HideAdBanner");
-}
-
-void QtAdMobBannerAndroid::AddTestDevice(const QString& hashedDeviceId)
-{
-    if (!IsValid())
+    if (!isValid())
     {
         return;
     }
@@ -224,7 +226,7 @@ const QtAdMobBannerAndroid::TInstances& QtAdMobBannerAndroid::Instances()
     return s_Instances;
 }
 
-bool QtAdMobBannerAndroid::IsValid() const
+bool QtAdMobBannerAndroid::isValid() const
 {
     return (m_Activity != 0 && m_Activity->isValid());
 }

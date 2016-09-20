@@ -18,7 +18,7 @@ public:
             return;
         }
 
-        handler->OnStatusChanged(status);
+        handler->onStatusChanged(status);
     }
 
     static void OnLoading(QtAdMobInterstitialIos* handler)
@@ -28,7 +28,7 @@ public:
             return;
         }
 
-        handler->OnLoading();
+        handler->loading();
     }
 
     static void OnWillPresent(QtAdMobInterstitialIos* handler)
@@ -38,7 +38,7 @@ public:
             return;
         }
 
-        handler->OnWillPresent();
+        handler->willPresent();
     }
 
     static void OnClosed(QtAdMobInterstitialIos* handler)
@@ -48,7 +48,7 @@ public:
             return;
         }
 
-        handler->OnClosed();
+        handler->closed();
     }
 };
 
@@ -142,9 +142,9 @@ QtAdMobInterstitialIos::~QtAdMobInterstitialIos()
 {
 }
 
-void QtAdMobInterstitialIos::LoadWithUnitId(const QString& unitId)
+void QtAdMobInterstitialIos::setUnitId(const QString& unitId)
 {
-    if (IsValid() &&
+    if (isValid() &&
         !m_AdMob.interstitial.hasBeenUsed)
     {
         return;
@@ -152,24 +152,26 @@ void QtAdMobInterstitialIos::LoadWithUnitId(const QString& unitId)
     
     m_IsNeedToShow = false;
 
-    m_AdMob = [[QtAdMobInterstitialDelegate alloc] initWithHandler:this
-                    adUnitId:[NSString stringWithUTF8String:unitId.toUtf8().data()]];
+    QtAdMobInterstitialDelegate *delegate = [[QtAdMobInterstitialDelegate alloc] initWithHandler:this
+                                                        adUnitId:[NSString stringWithUTF8String:unitId.toUtf8().data()]];
+    m_AdMob = (__bridge QtAdMobInterstitialDelegate*)(__bridge_retained void*)delegate;
     [m_AdMob load];
+    m_UnitId = unitId;
 }
 
-bool QtAdMobInterstitialIos::IsLoaded() const
+const QString& QtAdMobInterstitialIos::unitId() const
 {
-    if (!IsValid())
+    return m_UnitId;
+}
+
+void QtAdMobInterstitialIos::setVisible(bool isVisible)
+{
+    if (!isVisible)
     {
-        return false;
+        return; // TODO: implement hide
     }
 
-    return m_AdMob.interstitial.isReady;
-}
-
-void QtAdMobInterstitialIos::Show()
-{    
-    if (IsValid() && IsLoaded())
+    if (isValid() && isLoaded())
     {
         [m_AdMob show];
     }
@@ -179,13 +181,28 @@ void QtAdMobInterstitialIos::Show()
     }
 }
 
-void QtAdMobInterstitialIos::AddTestDevice(const QString& hashedDeviceId)
+bool QtAdMobInterstitialIos::visible()
+{
+    return false; // TODO: add implemention
+}
+
+bool QtAdMobInterstitialIos::isLoaded()
+{
+    if (!isValid())
+    {
+        return false;
+    }
+
+    return m_AdMob.interstitial.isReady;
+}
+
+void QtAdMobInterstitialIos::addTestDevice(const QString& hashedDeviceId)
 {
     NSString *deviceId = [NSString stringWithUTF8String:hashedDeviceId.toUtf8().data()];
     [m_AdMob.testDevices addObject:deviceId];
 }
 
-void QtAdMobInterstitialIos::OnStatusChanged(bool status)
+void QtAdMobInterstitialIos::onStatusChanged(bool status)
 {
     if (!status)
     {
@@ -196,10 +213,10 @@ void QtAdMobInterstitialIos::OnStatusChanged(bool status)
         [m_AdMob show];
     }
 
-    emit OnLoaded();
+    emit loaded();
 }
 
-bool QtAdMobInterstitialIos::IsValid() const
+bool QtAdMobInterstitialIos::isValid() const
 {
     return (m_AdMob != nil);
 }

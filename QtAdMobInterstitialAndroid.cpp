@@ -4,7 +4,7 @@
 
 #include <QAndroidJniObject>
 #include <qpa/qplatformnativeinterface.h>
-#include <QApplication>
+#include <QGuiApplication>
 #include "IQtAdMobBanner.h"
 #include <QAndroidJniEnvironment>
 #include <jni.h>
@@ -23,7 +23,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onInterstitialL
     QtAdMobInterstitialAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnLoaded();
+        emit beg.value()->loaded();
 
         beg++;
     }
@@ -39,7 +39,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onInterstitialL
     QtAdMobInterstitialAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnLoading();
+        emit beg.value()->loading();
 
         beg++;
     }
@@ -55,7 +55,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onInterstitialW
     QtAdMobInterstitialAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnWillPresent();
+        emit beg.value()->willPresent();
 
         beg++;
     }
@@ -71,7 +71,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onInterstitialC
     QtAdMobInterstitialAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnClicked();
+        emit beg.value()->clicked();
 
         beg++;
     }
@@ -87,7 +87,7 @@ JNIEXPORT void JNICALL Java_org_dreamdev_QtAdMob_QtAdMobActivity_onInterstitialC
     QtAdMobInterstitialAndroid::TInstances::ConstIterator end = instances.end();
     while(beg != end)
     {
-        emit beg.value()->OnClosed();
+        emit beg.value()->closed();
 
         beg++;
     }
@@ -106,7 +106,7 @@ QtAdMobInterstitialAndroid::QtAdMobInterstitialAndroid()
 {
     s_Instances[m_Index] = this;
 
-    QPlatformNativeInterface* interface = QApplication::platformNativeInterface();
+    QPlatformNativeInterface* interface = QGuiApplication::platformNativeInterface();
     jobject activity = (jobject)interface->nativeResourceForIntegration("QtActivity");
     if (activity)
     {
@@ -124,20 +124,42 @@ QtAdMobInterstitialAndroid::~QtAdMobInterstitialAndroid()
     }
 }
 
-void QtAdMobInterstitialAndroid::LoadWithUnitId(const QString& unitId)
+void QtAdMobInterstitialAndroid::setUnitId(const QString& unitId)
 {
-    if (!IsValid())
+    if (!isValid())
     {
         return;
     }
 
     QAndroidJniObject param1 = QAndroidJniObject::fromString(unitId);
     m_Activity->callMethod<void>("LoadAdInterstitialWithUnitId", "(Ljava/lang/String;)V", param1.object<jstring>());
+
+    m_UnitId = unitId;
 }
 
-bool QtAdMobInterstitialAndroid::IsLoaded() const
+const QString& QtAdMobInterstitialAndroid::unitId() const
 {
-    if (!IsValid())
+    return m_UnitId;
+}
+
+void QtAdMobInterstitialAndroid::setVisible(bool isVisible)
+{
+    if (!isValid())
+    {
+        return;
+    }
+    // TODO: implement hide
+    m_Activity->callMethod<void>("ShowAdInterstitial");
+}
+
+bool QtAdMobInterstitialAndroid::visible()
+{
+    return false; // TODO: implement retrieve visibility
+}
+
+bool QtAdMobInterstitialAndroid::isLoaded()
+{
+    if (!isValid())
     {
         return false;
     }
@@ -146,19 +168,9 @@ bool QtAdMobInterstitialAndroid::IsLoaded() const
     return isLoaded;
 }
 
-void QtAdMobInterstitialAndroid::Show()
-{    
-    if (!IsValid())
-    {
-        return;
-    }
-
-    m_Activity->callMethod<void>("ShowAdInterstitial");
-}
-
-void QtAdMobInterstitialAndroid::AddTestDevice(const QString& hashedDeviceId)
+void QtAdMobInterstitialAndroid::addTestDevice(const QString& hashedDeviceId)
 {
-    if (!IsValid())
+    if (!isValid())
     {
         return;
     }
@@ -172,7 +184,7 @@ const QtAdMobInterstitialAndroid::TInstances& QtAdMobInterstitialAndroid::Instan
     return s_Instances;
 }
 
-bool QtAdMobInterstitialAndroid::IsValid() const
+bool QtAdMobInterstitialAndroid::isValid() const
 {
     return (m_Activity != 0 && m_Activity->isValid());
 }
