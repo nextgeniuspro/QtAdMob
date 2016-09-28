@@ -293,6 +293,10 @@ public class QtAdMobActivity extends QtActivity
                     {
                         public void onAdLoaded()
                         {
+                            if (m_AdBannerView == null)
+                            {
+                                return;
+                            }
                             m_AdBannerView.setVisibility(View.VISIBLE);
                             m_IsAdBannerShowed = true;
 
