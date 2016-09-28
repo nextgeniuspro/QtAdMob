@@ -7,8 +7,10 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.ViewGroup;
 import android.util.Log;
+import android.graphics.Rect;
 import org.qtproject.qt5.android.bindings.QtActivity;
 import org.qtproject.qt5.android.bindings.QtApplication;
 import java.util.ArrayList;
@@ -30,12 +32,13 @@ public class QtAdMobActivity extends QtActivity
 
     private int GetStatusBarHeight()
     {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        int titleBarHeight= contentViewTop - statusBarHeight;
+        return titleBarHeight;
     }
 
     public void SetAdBannerUnitId(final String adId)
