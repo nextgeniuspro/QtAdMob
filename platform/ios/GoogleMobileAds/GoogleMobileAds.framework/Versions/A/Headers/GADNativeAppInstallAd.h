@@ -9,17 +9,18 @@
 #import <UIKit/UIKit.h>
 
 #import <GoogleMobileAds/GADAdLoaderDelegate.h>
+#import <GoogleMobileAds/GADMediaView.h>
 #import <GoogleMobileAds/GADNativeAd.h>
 #import <GoogleMobileAds/GADNativeAdImage.h>
+#import <GoogleMobileAds/GADVideoController.h>
 #import <GoogleMobileAds/GoogleMobileAdsDefines.h>
 
-/// For use with GADAdLoader's creation methods. If you request this ad type, your delegate must
-/// conform to the GADNativeAppInstallAdRequestDelegate protocol.
-///
-/// See GADNativeAdImageAdLoaderOptions.h for ad loader image options.
-GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeAppInstall;
+GAD_ASSUME_NONNULL_BEGIN
 
-/// Native app install ad.
+/// Native app install ad. To request this ad type, you need to pass
+/// kGADAdLoaderAdTypeNativeAppInstall (see GADAdLoaderAdTypes.h) to the |adTypes| parameter in
+/// GADAdLoader's initializer method. If you request this ad type, your delegate must conform to the
+/// GADNativeAppInstallAdRequestDelegate protocol.
 @interface GADNativeAppInstallAd : GADNativeAd
 
 #pragma mark - Must be displayed
@@ -34,15 +35,19 @@ GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeAppInstall;
 #pragma mark - Recommended to display
 
 /// App description.
-@property(nonatomic, readonly, copy) NSString *body;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSString *body;
 /// The app store name. For example, "App Store".
-@property(nonatomic, readonly, copy) NSString *store;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSString *store;
 /// String representation of the app's price.
-@property(nonatomic, readonly, copy) NSString *price;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSString *price;
 /// Array of GADNativeAdImage objects related to the advertised application.
-@property(nonatomic, readonly, strong) NSArray *images;
+@property(nonatomic, readonly, strong, GAD_NULLABLE) NSArray *images;
 /// App store rating (0 to 5).
-@property(nonatomic, readonly, copy) NSDecimalNumber *starRating;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSDecimalNumber *starRating;
+/// Video controller for controlling video playback in GADNativeAppInstallAdView's mediaView.
+/// Returns nil if the ad doesn't contain a video asset.
+@property(nonatomic, strong, readonly, GAD_NULLABLE) GADVideoController *videoController;
+
 @end
 
 #pragma mark - Protocol and constants
@@ -64,14 +69,25 @@ GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeAppInstall;
 /// This property must point to the native app install ad object rendered by this ad view.
 @property(nonatomic, strong) GADNativeAppInstallAd *nativeAppInstallAd;
 
-// Weak references to your ad view's asset views.
+/// Weak reference to your ad view's headline asset view.
 @property(nonatomic, weak) IBOutlet UIView *headlineView;
+/// Weak reference to your ad view's call to action asset view.
 @property(nonatomic, weak) IBOutlet UIView *callToActionView;
+/// Weak reference to your ad view's icon asset view.
 @property(nonatomic, weak) IBOutlet UIView *iconView;
-@property(nonatomic, weak) IBOutlet UIView *bodyView;
-@property(nonatomic, weak) IBOutlet UIView *storeView;
-@property(nonatomic, weak) IBOutlet UIView *priceView;
-@property(nonatomic, weak) IBOutlet UIView *imageView;
-@property(nonatomic, weak) IBOutlet UIView *starRatingView;
+/// Weak reference to your ad view's body asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *bodyView;
+/// Weak reference to your ad view's store asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *storeView;
+/// Weak reference to your ad view's price asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *priceView;
+/// Weak reference to your ad view's image asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *imageView;
+/// Weak reference to your ad view's star rating asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *starRatingView;
+/// Weak reference to your ad view's media asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet GADMediaView *mediaView;
 
 @end
+
+GAD_ASSUME_NONNULL_END

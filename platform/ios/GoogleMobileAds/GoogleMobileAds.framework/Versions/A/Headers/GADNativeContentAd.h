@@ -13,15 +13,14 @@
 #import <GoogleMobileAds/GADNativeAdImage.h>
 #import <GoogleMobileAds/GoogleMobileAdsDefines.h>
 
+GAD_ASSUME_NONNULL_BEGIN
+
 #pragma mark - Native Content Ad Assets
 
-/// For use with GADAdLoader's creation methods. If you request this ad type, your delegate must
-/// conform to the GADNativeContentAdRequestDelegate protocol.
-///
-/// See GADNativeAdImageAdLoaderOptions.h for ad loader image options.
-GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeContent;
-
-/// Native content ad.
+/// Native content ad. To request this ad type, you need to pass kGADAdLoaderAdTypeNativeContent
+/// (see GADAdLoaderAdTypes.h) to the |adTypes| parameter in GADAdLoader's initializer method. If
+/// you request this ad type, your delegate must conform to the GADNativeContentAdRequestDelegate
+/// protocol.
 @interface GADNativeContentAd : GADNativeAd
 
 #pragma mark - Must be displayed
@@ -34,13 +33,13 @@ GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeContent;
 #pragma mark - Recommended to display
 
 /// Large images.
-@property(nonatomic, readonly, copy) NSArray *images;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSArray *images;
 /// Small logo image.
-@property(nonatomic, readonly, strong) GADNativeAdImage *logo;
+@property(nonatomic, readonly, strong, GAD_NULLABLE) GADNativeAdImage *logo;
 /// Text that encourages user to take some action with the ad.
-@property(nonatomic, readonly, copy) NSString *callToAction;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSString *callToAction;
 /// Identifies the advertiser. For example, the advertiser’s name or visible URL.
-@property(nonatomic, readonly, copy) NSString *advertiser;
+@property(nonatomic, readonly, copy, GAD_NULLABLE) NSString *advertiser;
 @end
 
 #pragma mark - Protocol and constants
@@ -61,12 +60,19 @@ GAD_EXTERN NSString *const kGADAdLoaderAdTypeNativeContent;
 /// This property must point to the native content ad object rendered by this ad view.
 @property(nonatomic, strong) GADNativeContentAd *nativeContentAd;
 
-// Weak references to your ad view's asset views.
+/// Weak reference to your ad view's headline asset view.
 @property(nonatomic, weak) IBOutlet UIView *headlineView;
-@property(nonatomic, weak) IBOutlet UIView *bodyView;
-@property(nonatomic, weak) IBOutlet UIView *imageView;
-@property(nonatomic, weak) IBOutlet UIView *logoView;
-@property(nonatomic, weak) IBOutlet UIView *callToActionView;
-@property(nonatomic, weak) IBOutlet UIView *advertiserView;
+/// Weak reference to your ad view's body asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *bodyView;
+/// Weak reference to your ad view's image asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *imageView;
+/// Weak reference to your ad view's logo asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *logoView;
+/// Weak reference to your ad view's call to action asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *callToActionView;
+/// Weak reference to your ad view's advertiser asset view.
+@property(nonatomic, weak, GAD_NULLABLE) IBOutlet UIView *advertiserView;
 
 @end
+
+GAD_ASSUME_NONNULL_END

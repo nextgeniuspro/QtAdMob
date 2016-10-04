@@ -8,8 +8,6 @@
 # ANDROID_PACKAGE_SOURCE_DIR variable to your
 # manifest location
 
-VERSION = 1.0.0
-
 SOURCES += \
     $$PWD/QtAdMobBannerAndroid.cpp \
     $$PWD/QtAdMobBannerDummy.cpp \
@@ -50,7 +48,12 @@ ios {
                 -framework EventKit \
                 -framework EventKitUI \
                 -framework CoreMedia \
-                -framework MediaPlayer
+                -framework MediaPlayer \
+                -framework SafariServices \
+                -framework GLKit \
+                -framework CoreMotion \
+                -framework CoreVideo \
+                -framework MobileCoreServices
 }
 
 android {

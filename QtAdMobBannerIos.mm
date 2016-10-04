@@ -58,9 +58,7 @@ public:
 @property (nonatomic, strong) GADBannerView* bannerView;
 @property (nonatomic, strong) NSMutableArray* testDevices;
 @property (nonatomic, assign) QtAdMobBannerIos *handler;
-
-- (id)initWithHandler:(QtAdMobBannerIos *)handler;
-- (void)load;
+@property (nonatomic, strong) GADRequest *request;
 
 @end
 
@@ -82,7 +80,10 @@ public:
         UIView *view = rootViewController.view;
         
         _bannerView.rootViewController = rootViewController;
+        _bannerView.autoloadEnabled = YES;
         [view addSubview:_bannerView];
+
+        _request = [GADRequest request];
     }
     return self;
 }
@@ -94,11 +95,10 @@ public:
 
 - (void)load
 {
-    GADRequest *request = [GADRequest request];
-    request.testDevices = _testDevices;
-    [_bannerView loadRequest:request];
-
     QtAdMobBannerIosProtected::OnLoading(self.handler);
+
+    _request.testDevices = _testDevices;
+    [_bannerView loadRequest:_request];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)view
@@ -247,8 +247,8 @@ void QtAdMobBannerIos::setVisible(bool isVisible)
 
     if (m_LoadingState == Idle)
     {
-        [m_AdMob load];
         m_LoadingState = Loading;
+        [m_AdMob load];
     }
 
     m_AdMob.bannerView.hidden = !isVisible;
@@ -273,7 +273,7 @@ void QtAdMobBannerIos::addTestDevice(const QString& hashedDeviceId)
 {
     NSString *deviceId = [NSString stringWithUTF8String:hashedDeviceId.toUtf8().data()];
     [m_AdMob.testDevices addObject:deviceId];
-    
+
     m_LoadingState = Idle;
 }
 
