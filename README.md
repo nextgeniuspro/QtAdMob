@@ -1,5 +1,5 @@
 # QtAdMob #
-QtAdMob it is C++ lib for Qt with QML support, which allow to show ads from AdMob on Android and iOS platforms
+QtAdMob is a C++ lib for Qt with QML support, which allows to show ads from AdMob on Android and iOS platforms
 
 ver. 1.0.0 - QML is supported now!
 
