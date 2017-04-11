@@ -75,8 +75,12 @@ public:
         _bannerView.delegate = self;
         
         UIApplication *application = [UIApplication sharedApplication];
-        UIWindow *window = [[application windows] firstObject];
-        UIViewController* rootViewController = [window rootViewController];
+        NSArray *windows = [application windows];
+        UIViewController * __block rootViewController = nil;
+        [windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+            rootViewController = [window rootViewController];
+            *stop = (rootViewController != nil);
+        }];
         UIView *view = rootViewController.view;
         
         _bannerView.rootViewController = rootViewController;
