@@ -58,6 +58,8 @@ private:
     QString m_UnitId;
 #if defined(__OBJC__)
     __unsafe_unretained QtAdMobInterstitialDelegate* m_AdMob;
+#else
+    void* m_AdMob;
 #endif
     bool m_IsNeedToShow;
 };
