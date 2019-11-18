@@ -84,6 +84,8 @@ private:
     QPoint m_Position;
 #if defined(__OBJC__)
     __unsafe_unretained QtAdMobBannerDelegate* m_AdMob;
+#else
+    void* m_AdMob;
 #endif
     enum LoadingState
     {
