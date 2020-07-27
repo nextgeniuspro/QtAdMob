@@ -13,6 +13,7 @@ SOURCES += \
     $$PWD/QtAdMobBannerDummy.cpp \
     $$PWD/QtAdMobInterstitialAndroid.cpp \
     $$PWD/QtAdMobInterstitialDummy.cpp \
+    $$PWD/QtAdMobRewardedVideo.cpp \
     $$PWD/QtAdmobBanner.cpp \
     $$PWD/QtAdmobInterstitial.cpp
 
@@ -30,7 +31,8 @@ HEADERS  += \
     $$PWD/QtAdMobInterstitial.h \
     $$PWD/QtAdMobInterstitialIos.h \
     $$PWD/QtAdMobInterstitialAndroid.h \
-    $$PWD/QtAdMobInterstitialDummy.h
+    $$PWD/QtAdMobInterstitialDummy.h \
+    $$PWD/QtAdMobRewardedVideo.h
 
 ios {
     ios:QMAKE_CXXFLAGS += -fobjc-arc
@@ -69,3 +71,4 @@ android {
     export(copydata.commands)
     android:QMAKE_EXTRA_TARGETS += first copydata
 }
+
