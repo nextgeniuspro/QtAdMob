@@ -5,6 +5,10 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.MobileAds;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +33,10 @@ public class QtAdMobActivity extends QtActivity
     private int m_AdBannerHeight = 0;
     private int m_StatusBarHeight = 0;
     private int m_ReadyToRequest = 0x00;
+    /// rewarded video Ad
+    private RewardedVideoAd m_AdRewardedVideo = null;
+    private String m_RewardedVideoAdUnitId;
+    private String m_RewardedVideoTestDeviceId;
 
     private int GetStatusBarHeight()
     {
@@ -354,6 +362,64 @@ public class QtAdMobActivity extends QtActivity
             }
         });
     }
+    
+    public void InitializeRewardedVideoAd()
+    {
+        final QtAdMobActivity self = this;
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                m_AdRewardedVideo = MobileAds.getRewardedVideoAdInstance(self);
+                m_AdRewardedVideo.setRewardedVideoAdListener(self);
+            }
+        });
+    }
+
+    public void SetRewardedVideoAdUnitId(final String adId)
+    {
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                m_RewardedVideoAdUnitId = adId;
+            }
+        });
+    }
+
+    public void SetRewardedVideoTestDeviceId(final String testDeviceId){
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                m_RewardedVideoTestDeviceId = testDeviceId;
+            }
+        });
+    }
+
+    public void LoadRewardedVideoAd()
+    {
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                AdRequest.Builder adRequest = new AdRequest.Builder();
+                adRequest.addTestDevice(m_RewardedVideoTestDeviceId);
+                m_AdRewardedVideo.loadAd(m_RewardedVideoAdUnitId, adRequest.build());
+            }
+        });
+    }
+
+    public void ShowRewardedVideoAd()
+    {
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                m_AdRewardedVideo.show();
+            }
+        });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -388,6 +454,43 @@ public class QtAdMobActivity extends QtActivity
             m_AdBannerView.destroy();
         }
     }
+    
+    @Override
+    public void onRewarded(RewardItem reward)
+    {
+        Rewarded();
+    }
+    @Override
+    public void onRewardedVideoAdClosed()
+    {
+        RewardedVideoAdClosed();
+    }
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode)
+    {
+        RewardedVideoAdFailedToLoad(errorCode);
+    }
+    @Override
+    public void onRewardedVideoAdLeftApplication()
+    {
+    }
+    @Override
+    public void onRewardedVideoAdLoaded()
+    {
+        RewardedVideoAdLoaded();
+    }
+    @Override
+    public void onRewardedVideoAdOpened()
+    {
+    }
+    @Override
+    public void onRewardedVideoCompleted()
+    {
+    }
+    @Override
+    public void onRewardedVideoStarted()
+    {
+    }
 
     private static native void onBannerLoaded();
     private static native void onBannerLoading();
@@ -399,4 +502,13 @@ public class QtAdMobActivity extends QtActivity
     private static native void onInterstitialWillPresent();
     private static native void onInterstitialClosed();
     private static native void onInterstitialClicked();
+    
+    private static native void Rewarded();
+    private static native void RewardedVideoAdClosed();
+    private static native void RewardedVideoAdFailedToLoad(int errorCode);
+    private static native void RewardedVideoAdLeftApplication();
+    private static native void RewardedVideoAdLoaded();
+    private static native void RewardedVideoAdOpened();
+    private static native void RewardedVideoCompleted();
+    private static native void RewardedVideoStarted();
 }

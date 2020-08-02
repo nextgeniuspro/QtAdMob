@@ -14,6 +14,7 @@ SOURCES += \
     $$PWD/QtAdMobInterstitialAndroid.cpp \
     $$PWD/QtAdMobInterstitialDummy.cpp \
     $$PWD/QtAdmobBanner.cpp \
+    $$PWD/QtAdMobRewardedVideo.cpp \
     $$PWD/QtAdmobInterstitial.cpp
 
 OBJECTIVE_SOURCES += \
@@ -30,6 +31,7 @@ HEADERS  += \
     $$PWD/QtAdMobInterstitial.h \
     $$PWD/QtAdMobInterstitialIos.h \
     $$PWD/QtAdMobInterstitialAndroid.h \
+    $$PWD/QtAdMobRewardedVideo.h \
     $$PWD/QtAdMobInterstitialDummy.h
 
 ios {
